@@ -436,21 +436,3 @@ def generate_payload():
     payloads = random.sample(payloads, 70)     # 페이로드 중 무작위로 80개를 뽑음
 
     return payloads
-
-
-if __name__ == '__main__':
-    payloads_script = xss_script(100)
-    payloads_event_handler = xss_event_handler(100)
-    payloads_javascript = xss_javascript(100)
-    payloads_srcdoc = xss_srcdoc(50)
-    payloads_inner_html = xss_inner_html(50)
-    payloads_etc = xss_etc()
-
-    payloads = payloads_script + payloads_event_handler + payloads_javascript + payloads_srcdoc + payloads_inner_html + payloads_etc
-
-    payloads = list(set(payloads))
-    random.shuffle(payloads)
-
-    for payload in payloads:
-        print(payload)
-        print()

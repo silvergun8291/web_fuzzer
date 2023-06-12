@@ -135,12 +135,3 @@ def generate_payload() -> list[str]:
 
     return payloads
 
-
-if __name__ == '__main__':
-    payloads = generate_payload()
-
-    index = 1
-    for payload in payloads:
-        print(f'[{index}] {payload}')
-        print()
-        index += 1

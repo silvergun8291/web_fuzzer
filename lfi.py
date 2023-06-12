@@ -74,19 +74,3 @@ def detect_lfi(driver, url, payload) -> dict:  # LFI 취약점이 발생했는�
 
     return result
 
-
-if __name__ == "__main__":
-    urls = open('result_urls.txt').read().splitlines()
-
-    target_urls = find_target_url(urls)
-    target_file = 'etc/passwd'
-
-    for url in target_urls:
-        print(url)
-
-    target_path = get_target_path(target_file)
-
-    payloads = generate_payload(urls, target_file, 50)
-
-    for payload in payloads:
-        print(payload)

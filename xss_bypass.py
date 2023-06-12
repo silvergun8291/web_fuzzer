@@ -391,9 +391,3 @@ def get_bypass_javascript():
 
     return javascripts
 
-
-def get_base64_payload():
-    base64_payload = [none, base64_image, base64_application]
-
-    return base64_payload
-

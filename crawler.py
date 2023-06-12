@@ -8,7 +8,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import fuzzer
 
 
 visited_urls = set()
@@ -128,34 +127,4 @@ def get_form_details(form) -> dict:
     return details
 
 
-if __name__ == "__main__":
-    driver = load_driver()
 
-    # 로그인
-    login(driver)
-
-    # 쿠키 가져오기
-    c = driver.get_cookies()
-    cookies = get_cookie(c)
-
-    print(f'Cookie: {cookies}\n')
-
-    # 쿠기 설정
-    for key, value in cookies.items():
-        driver.add_cookie({"name": key, "value": value})
-
-    # 타겟 페이지 크롤링
-    urls = crawl(base_url, driver)
-
-    # for url in urls:
-    #     print(url)
-
-    for url in urls:
-        # form tag 수집
-        driver.get(url)
-        forms = get_forms(url, cookies)
-
-        for form in forms:
-            print(f'\nurl: {url}')
-            form_details = get_form_details(form)
-            print(form_details)

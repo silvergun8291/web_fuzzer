@@ -130,11 +130,3 @@ def generate_payload() -> list[str]:
     payloads = list(set(payloads))
 
     return payloads
-
-
-if __name__ == "__main__":
-    payloads = generate_payload()
-    print(f'length = {len(payloads)}')
-
-    for payload in payloads:
-        print(payload)

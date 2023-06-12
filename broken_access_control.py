@@ -297,13 +297,3 @@ def broken_access_control_test():
     print_execution_time(start_time, end_time)
 
     return (sensitive_pages, deprecated_pages)
-
-
-if __name__ == "__main__":
-    target_domain: str = 'http://localhost/'
-    urls = open('result_urls.txt').read().splitlines()
-
-    sensitive_pages, deprecated_pages = broken_access_control(target_domain, urls)
-    print_testing_result(sensitive_pages, deprecated_pages)
-
-

@@ -1,11 +1,5 @@
-import signal
-import sys
 import time
 import json
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common import NoAlertPresentException
 import re
 
 from tqdm import tqdm
@@ -60,7 +54,7 @@ def dvwa(urls) -> list[str]:
 
     for url in urls:
         if url.endswith("/#"):
-            tmp = url[:-2]  # 끝의 "/#" 부분을 제거
+            tmp = url[:-1]  # 끝의 "/#" 부분을 제거
             tmp_list.append(tmp)
         else:
             tmp_list.append(url)
@@ -87,102 +81,6 @@ def print_testing_result(testing_result):
 
     for result in testing_result:
         print(f'\n{result}')
-
-
-def xss_test():
-    driver = crawler.load_driver()
-    crawler.login(driver, 'http://localhost/login.php', 'admin', 'password')
-    c = driver.get_cookies()
-    cookies = crawler.get_cookie(c)
-    cookies = change_security(cookies, 'high')
-
-    print(f'\nCookie: {cookies}\n')
-
-    # 쿠기 설정
-    for key, value in cookies.items():
-        driver.add_cookie({"name": key, "value": value})
-
-    # [5] Cross Site Scripting
-    function_start('Cross Site Scripting')
-
-    urls = ['http://localhost/vulnerabilities/xss_r/', 'http://localhost/vulnerabilities/xss_s/', 'http://localhost/vulnerabilities/csp/']
-
-    with tqdm(total=len(urls), ncols=100, desc="Cross Site Scripting", mininterval=0.5) as pbar:
-
-        xss_result = []
-
-        for url in urls:
-            if not xss.check_attackable(driver, url):
-                continue
-
-            driver.get(url)
-            forms = crawler.get_forms(url, cookies)
-
-            for form in forms:
-                form_details = xss.get_form_details(form)
-                payloads = xss.generate_payload()
-
-                for payload in payloads:
-                    result = xss.submit_form(driver, form_details, url, payload)
-
-                    if result["Vulnerability"] != "":
-                        tmp = json.dumps(result, indent=4)
-                        xss_result.append(tmp)
-                        testing_result.append(tmp)
-                        break
-
-            pbar.update(1)
-
-        print_list(xss_result)
-
-        clear_guestbook(driver)
-
-
-def ci_test():
-    driver = crawler.load_driver()
-    crawler.login(driver, 'http://localhost/login.php', 'admin', 'password')
-    c = driver.get_cookies()
-    cookies = crawler.get_cookie(c)
-    cookies = change_security(cookies, 'high')
-
-    print(f'\nCookie: {cookies}\n')
-
-    # 쿠기 설정
-    for key, value in cookies.items():
-        driver.add_cookie({"name": key, "value": value})
-
-    # [5] Cross Site Scripting
-    function_start('Command Injection')
-
-    urls = ['http://localhost/vulnerabilities/exec/']
-
-    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.5) as pbar:
-
-        ci_result = []
-
-        for url in urls:
-            if not xss.check_attackable(driver, url):
-                continue
-
-            driver.get(url)
-            forms = crawler.get_forms(url, cookies)
-
-            for form in forms:
-                form_details = crawler.get_form_details(form)
-                payloads = command_injection.generate_payload()
-
-                for payload in payloads:
-                    print(f'payload : {payload}')
-                    result = command_injection.submit_form(driver, form_details, url, payload)
-
-                    if result["Vulnerability"] != "":
-                        tmp = json.dumps(result, indent=4)
-                        ci_result.append(tmp)
-                        break
-
-            pbar.update(1)
-
-        print_list(ci_result)
 
 
 def fuzzing():
@@ -221,8 +119,8 @@ def fuzzing():
     # [0] 타겟 페이지 크롤링
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
-
     print_list(urls)
+
 
     # [1] Broken Access Control
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
@@ -231,7 +129,9 @@ def fuzzing():
         bac_result = {"Vulnerability": "Broken Access Control", "URL": page}
         testing_result.append(json.dumps(bac_result, indent=4))
 
+
     urls = dvwa(urls)  # 공격 타겟을 제한
+
 
     # 로그인
     if login_url != '':
@@ -241,7 +141,7 @@ def fuzzing():
     # [2] Command Injection
     function_start("Command Injection")
 
-    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
+    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.5) as pbar:
         ci_result = []
 
         for url in urls:
@@ -281,7 +181,7 @@ def fuzzing():
     target_path = lfi.get_target_path(target_file)
     payloads = lfi.generate_payload(urls, target_file, 50)
 
-    with tqdm(total=len(target_urls), ncols=100, desc="Local File Inclusion", mininterval=0.1) as pbar:
+    with tqdm(total=len(target_urls), ncols=100, desc="Local File Inclusion", mininterval=0.5) as pbar:
         lfi_result = []
 
         for url in target_urls:
