@@ -30,8 +30,11 @@ alerts: list[str] = exec_func(get_bypass_alert(), alert)
 
 
 def check_attackable(driver, url) -> bool:
-    # WebDriver 초기화
-    driver.get(url)
+    try:
+        # WebDriver 초기화
+        driver.get(url)
+    except:
+        return False
 
     # 모든 input 요소와 select 요소 검색
     input_elements_text = driver.find_elements(By.CSS_SELECTOR, "input[type='text']")
