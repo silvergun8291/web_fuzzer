@@ -75,12 +75,12 @@ def print_list(list):
         print(f'\n{data}')
 
 
-def print_testing_result(testing_result):
-    print('\n')
-    function_start("Testing Result")
+def make_reuslt_file(testing_result):
+    output_file = "Testing_Result.json"
 
-    for result in testing_result:
-        print(f'\n{result}')
+    # JSON 파일로 데이터 저장
+    with open(output_file, 'w') as json_file:
+        json.dump(testing_result, json_file)
 
 
 def fuzzing():
@@ -126,8 +126,8 @@ def fuzzing():
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
 
     for page in broken_access_control_pages:
-        bac_result = {"Vulnerability": "Broken Access Control", "URL": page}
-        testing_result.append(json.dumps(bac_result, indent=4))
+        bac_result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
+        testing_result.append(bac_result)
 
 
     urls = dvwa(urls)  # 공격 타겟을 제한
@@ -160,16 +160,15 @@ def fuzzing():
                     result = command_injection.submit_form(driver, form_details, url, payload)
 
                     if result["Vulnerability"] != "":
-                        tmp = json.dumps(result, indent=4)
-                        ci_result.append(tmp)
-                        testing_result.append(tmp)
+                        ci_result.append(result)
+                        testing_result.append(result)
                         break
 
             pbar.update(1)
 
         pbar.update(len(urls))
 
-        print_list(ci_result)
+        print(json.dumps(ci_result, indent=4))
 
 
     # [3] Local File Inclusion
@@ -189,16 +188,15 @@ def fuzzing():
                 result = lfi.detect_lfi(driver, url, payload)
 
                 if result["Vulnerability"] != "":
-                    tmp = json.dumps(result, indent=4)
-                    lfi_result.append(tmp)
-                    testing_result.append(tmp)
+                    lfi_result.append(result)
+                    testing_result.append(result)
                     break
 
             pbar.update(1)
 
         pbar.update(len(urls))
 
-        print_list(lfi_result)
+        print(json.dumps(lfi_result, indent=4))
 
 
     # [4] SQL Injection
@@ -222,16 +220,15 @@ def fuzzing():
                     result = sql_injection.submit_form(driver, form_details, url, payload)
 
                     if result["Vulnerability"] != "":
-                        tmp = json.dumps(result, indent=4)
-                        si_result.append(tmp)
-                        testing_result.append(tmp)
+                        si_result.append(result)
+                        testing_result.append(result)
                         break
 
             pbar.update(1)
 
         pbar.update(len(urls))
 
-        print_list(si_result)
+        print(json.dumps(si_result, indent=4))
 
 
     # [5] Cross Site Scripting
@@ -255,19 +252,18 @@ def fuzzing():
                     result = xss.submit_form(driver, form_details, url, payload)
 
                     if result["Vulnerability"] != "":
-                        tmp = json.dumps(result, indent=4)
-                        xss_result.append(tmp)
-                        testing_result.append(tmp)
+                        xss_result.append(result)
+                        testing_result.append(result)
                         break
 
             pbar.update(1)
 
         pbar.update(len(urls))
 
-        print_list(xss_result)
+        print(json.dumps(xss_result, indent=4))
 
 
-    print_testing_result(testing_result)
+    make_reuslt_file(testing_result)
 
     end_time = time.time()
 

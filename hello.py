@@ -1,6 +1,13 @@
-urls = open("./result_urls.txt").read().splitlines()
+import json
 
-urls.sort()
+data = {
+    "Vulnerability": "Local File Inclusion",
+    "URL": "http://localhost/vulnerabilities/fi/?page=",
+    "Method": "get",
+    "Payload": "http://localhost/vulnerabilities/fi/?page=file:///etc/passwd"
+}
 
-for url in urls:
-    print(url)
+print(json.dumps(data, indent=4))
+
+
+
