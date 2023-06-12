@@ -10,6 +10,7 @@ import sql_injection
 import command_injection
 import broken_access_control
 import lfi
+import generate_report
 
 
 def input_target_url() -> str:
@@ -113,14 +114,12 @@ def fuzzing():
     for key, value in cookies.items():
         driver.add_cookie({"name": key, "value": value})
 
-
-    #urls = open("./result_urls.txt").read().splitlines()
+    # urls = open("./result_urls.txt").read().splitlines()
 
     # [0] 타겟 페이지 크롤링
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
     print_list(urls)
-
 
     # [1] Broken Access Control
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
@@ -129,14 +128,11 @@ def fuzzing():
         bac_result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
         testing_result.append(bac_result)
 
-
     urls = dvwa(urls)  # 공격 타겟을 제한
-
 
     # 로그인
     if login_url != '':
         crawler.login(driver, login_url, id, pw)
-
 
     # [2] Command Injection
     function_start("Command Injection")
@@ -170,7 +166,6 @@ def fuzzing():
 
         print(json.dumps(ci_result, indent=4))
 
-
     # [3] Local File Inclusion
     function_start("Local File Inclusion")
 
@@ -197,7 +192,6 @@ def fuzzing():
         pbar.update(len(urls))
 
         print(json.dumps(lfi_result, indent=4))
-
 
     # [4] SQL Injection
     function_start("SQL Injection")
@@ -230,7 +224,6 @@ def fuzzing():
 
         print(json.dumps(si_result, indent=4))
 
-
     # [5] Cross Site Scripting
     function_start('Cross Site Scripting')
 
@@ -262,8 +255,9 @@ def fuzzing():
 
         print(json.dumps(xss_result, indent=4))
 
-
     make_reuslt_file(testing_result)
+    result_json = generate_report.load_json()
+    generate_report.generate_report(result_json)
 
     end_time = time.time()
 
