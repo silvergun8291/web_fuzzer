@@ -1,22 +1,16 @@
-import time
-from http import HTTPStatus
-
+import re
 import requests
-from urllib.parse import urljoin, urlencode, urlsplit, urlparse
 from bs4 import BeautifulSoup
-
 from selenium import webdriver
-from selenium.common import NoSuchElementException
+from selenium.common import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import fuzzer
 
-import xss
-import sql_injection
 
-base_url: str = 'http://localhost'
-login_url: str = f'{base_url}/login.php'
-target_url: str = f'{base_url}/vulnerabilities/xss_r/'
 visited_urls = set()
 
 
@@ -41,20 +35,20 @@ def load_driver():  # driver 반환 함수
     return webdriver.Chrome(service=service, options=options)
 
 
-def login(driver):  # login 함수
+def login(driver, login_url, id, pw):  # login 함수
     driver.get(login_url)
 
     elem = driver.find_element(By.NAME, "username")
-    elem.send_keys("admin")
+    elem.send_keys(id)
 
     elem = driver.find_element(By.NAME, "password")
-    elem.send_keys("password")
+    elem.send_keys(pw)
 
     elem = driver.find_element(By.NAME, "Login")
     elem.click()
 
 
-def crawl(url):  # 쿠키 매개변수가 있는 수정된 crawl() 함수
+def crawl(base_url, url, driver):  # 쿠키 매개변수가 있는 수정된 crawl() 함수
     # URL 방문
     driver.get(url)
 
@@ -65,12 +59,34 @@ def crawl(url):  # 쿠키 매개변수가 있는 수정된 crawl() 함수
     for link in links:
         href = link.get_attribute("href")
         if href and href.startswith(base_url) and href not in visited_urls:
-            if href != f"{base_url}/logout.php":
+            pattern = r"phpids"
+
+            if href != f"{base_url}/logout.php" and not (re.search(pattern, href)):
                 visited_urls.add(href)
                 page_urls.append(href)
 
+            # onclick 이벤트 처리 (팝업 창 클릭)
+            onclick_attr = link.get_attribute("onclick")
+            if onclick_attr and "popUp" in onclick_attr:
+                driver.execute_script(onclick_attr)
+
+                # 팝업 창 대기 및 처리
+                try:
+                    WebDriverWait(driver, 3).until(EC.number_of_windows_to_be(3))
+                    window_handles = driver.window_handles
+                    driver.switch_to.window(window_handles[2])
+
+                    # 팝업 창의 URL 수집
+                    popup_url = driver.current_url
+                    page_urls.append(popup_url)
+
+                    driver.close()
+                    driver.switch_to.window(window_handles[1])
+                except TimeoutException:
+                    print("Time Out!")
+
     for page_url in page_urls:
-        sub_page_urls = crawl(page_url)
+        sub_page_urls = crawl(base_url, page_url, driver)
         page_urls.extend(sub_page_urls)
 
     # 현재 페이지 처리 후에 뒤로 가기
@@ -89,7 +105,9 @@ def get_forms(url, cookies):  # 모든 form 태그 반환
     return soup.find_all("form")
 
 
-def get_form_details(form):  # form tag 내의 세부 데이터 추출 함수
+def get_form_details(form) -> dict:
+    # form에서 세부 내용을 뽑아내는 함수
+
     details = {}
 
     # form의 이동할 action url
@@ -98,24 +116,16 @@ def get_form_details(form):  # form tag 내의 세부 데이터 추출 함수
 
     inputs = []
 
-    for tag in form.find_all(["input", "textarea", "select", "checkbox", "button"]):
-        tag_type = tag.name
-        tag_name = tag.attrs.get("name")
-        inputs.append({"type": tag_type, "name": tag_name})
+    for input_tag in form.find_all("input"):
+        input_type = input_tag.attrs.get("type", "text")
+        input_name = input_tag.attrs.get("name")
+        inputs.append({"type": input_type, "name": input_name})
 
     details["action"] = action
     details["method"] = method
     details["inputs"] = inputs
 
     return details
-
-
-def get_xss_payload() -> list[str]:
-    return xss.xss()
-
-
-def get_sql_injection_payload() -> list[str]:
-    return sql_injection.sql_injection()
 
 
 if __name__ == "__main__":
@@ -128,14 +138,17 @@ if __name__ == "__main__":
     c = driver.get_cookies()
     cookies = get_cookie(c)
 
-    print(f'Cookie: {cookies}')
+    print(f'Cookie: {cookies}\n')
 
     # 쿠기 설정
     for key, value in cookies.items():
         driver.add_cookie({"name": key, "value": value})
 
     # 타겟 페이지 크롤링
-    urls = crawl(base_url)
+    urls = crawl(base_url, driver)
+
+    # for url in urls:
+    #     print(url)
 
     for url in urls:
         # form tag 수집
@@ -143,8 +156,6 @@ if __name__ == "__main__":
         forms = get_forms(url, cookies)
 
         for form in forms:
+            print(f'\nurl: {url}')
             form_details = get_form_details(form)
-            xss_payloads = get_xss_payload()
-
-
-
+            print(form_details)
