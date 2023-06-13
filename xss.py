@@ -4,7 +4,6 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
-from pwn import *
 from xss_bypass import *
 from urllib.parse import urljoin, urlencode
 import random
@@ -111,7 +110,7 @@ def submit_form(driver, form_details, url, value) -> dict:
                     driver.switch_to.frame(iframe)
 
                     element = driver.find_element(By.ID, "fuzz")
-                    sleep(0.1)
+                    time.sleep(0.1)
 
                     if element.is_enabled():    # element가 클릭 가능하면
                         element.click()         # 클릭
@@ -131,7 +130,7 @@ def submit_form(driver, form_details, url, value) -> dict:
             if 'id="fuzz"' in value:  # 이벤트 핸들러를 사용한 페이로드 일 때
                 try:    # id가 "fuzz"인 element를 찾고
                     element = driver.find_element(By.ID, 'fuzz')
-                    sleep(0.1)
+                    time.sleep(0.1)
 
                     if element.is_enabled():    # element가 클릭 가능한 경우
                         element.click()         # element를 클릭
@@ -206,7 +205,7 @@ post_to_url(arguments[0], arguments[1]);
             if 'id="fuzz"' in value:  # 이벤트 핸들러를 이용한 페이로드 일 때
                 try:
                     element = driver.find_element(By.ID, 'fuzz')
-                    sleep(0.1)
+                    time.sleep(0.1)
 
                     if element.is_enabled():
                         # 요소가 클릭 가능한 상태일 때 수행할 동작

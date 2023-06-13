@@ -4,7 +4,6 @@ from fuzzingbook.WebFuzzer import *
 from selenium.common import NoSuchElementException, NoAlertPresentException
 from selenium.webdriver.common.by import By
 from command_injection_bypass import *
-from pwn import *
 import random
 
 
