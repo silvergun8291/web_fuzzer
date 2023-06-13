@@ -121,6 +121,7 @@ def fuzzing():
     urls = crawler.crawl(base_url, base_url, driver)
     print_list(urls)
 
+
     # [1] Broken Access Control
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
 
@@ -133,6 +134,7 @@ def fuzzing():
     # 로그인
     if login_url != '':
         crawler.login(driver, login_url, id, pw)
+
 
     # [2] Command Injection
     function_start("Command Injection")
@@ -166,6 +168,7 @@ def fuzzing():
 
         print(json.dumps(ci_result, indent=4))
 
+
     # [3] Local File Inclusion
     function_start("Local File Inclusion")
 
@@ -192,6 +195,7 @@ def fuzzing():
         pbar.update(len(urls))
 
         print(json.dumps(lfi_result, indent=4))
+
 
     # [4] SQL Injection
     function_start("SQL Injection")
@@ -223,6 +227,7 @@ def fuzzing():
         pbar.update(len(urls))
 
         print(json.dumps(si_result, indent=4))
+
 
     # [5] Cross Site Scripting
     function_start('Cross Site Scripting')

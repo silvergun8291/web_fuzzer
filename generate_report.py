@@ -24,8 +24,8 @@ def generate_report(results):
         </tr>
     """
     for result in results:
-        vulnerability = html.escape(result['Vulnerability'])
-        url = html.escape(result['URL'])
+        vulnerability = f"<strong>{html.escape(result['Vulnerability'])}</strong>"
+        url = f"<a href='{html.escape(result['URL'])}'>{html.escape(result['URL'])}</a>"
         method = html.escape(result['Method'])
         payload = result['Payload']
 
@@ -35,7 +35,7 @@ def generate_report(results):
             for key, value in payload.items():
                 key = html.escape(str(key))
                 value = html.escape(str(value))
-                payload_items += f"<div class='payload-item'><span class='payload-key'>{key}:</span> <span class='payload-value'>{value}\n</span></div><br>"
+                payload_items += f"<div class='payload-item'><span class='payload-key'>{key}:</span> <span class='payload-value'>{value}</span></div><br>"
 
             payload = f"<div class='payload-box'>{payload_items}</div>"
         else:
@@ -44,7 +44,7 @@ def generate_report(results):
                 payload_items = ""
                 for item in payload:
                     item = html.escape(str(item))
-                    payload_items += f"<div class='payload-item'>{item}\n</div><br>"
+                    payload_items += f"<div class='payload-item'>{item}</div><br>"
                 payload = payload_items
             else:
                 payload = html.escape(str(payload))
@@ -138,6 +138,7 @@ def generate_report(results):
                 padding: 10px 15px;
                 border: 1px solid #e0e0e0;
                 word-wrap: break-word;
+                text-align: center;
             }}
 
             th {{
@@ -146,13 +147,13 @@ def generate_report(results):
             }}
 
             .payload-box {{
-                display: flex;
                 flex-wrap: wrap;
                 margin-top: 10px;
             }}
 
             .payload-item {{
                 margin-bottom: 3px;
+                text-align: left;
             }}
 
             .payload-key {{
@@ -166,17 +167,23 @@ def generate_report(results):
     </head>
 
     <body>
-        <h1>웹 취약점 스캐너 레포트</h1>
+        <h1>웹 취약점 점검 레포트</h1>
 
         <div class="chart-container">
             <img src="vulnerability_chart.png" alt="Vulnerability Chart">
         </div>
 
+        <br>
+
         <div class="container">
+            <h3>Vulnerability Summary</h2>
             {vulnerability_table}
         </div>
 
+        <br>
+
         <div class="container">
+            <h3>Testing Information</h2>
             {testing_info}
         </div>
     </body>

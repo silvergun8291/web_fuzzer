@@ -70,7 +70,7 @@ def detect_lfi(driver, url, payload) -> dict:  # LFI 취약점이 발생했는�
         result["Vulnerability"] = "Local File Inclusion"
         result["URL"] = url
         result["Method"] = "get"
-        result["Payload"] = payload
+        result["Payload"] = {'url': payload}
 
     return result
 

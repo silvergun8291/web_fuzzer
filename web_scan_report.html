@@ -46,6 +46,7 @@
                 padding: 10px 15px;
                 border: 1px solid #e0e0e0;
                 word-wrap: break-word;
+                text-align: center;
             }
 
             th {
@@ -54,13 +55,13 @@
             }
 
             .payload-box {
-                display: flex;
                 flex-wrap: wrap;
                 margin-top: 10px;
             }
 
             .payload-item {
                 margin-bottom: 3px;
+                text-align: left;
             }
 
             .payload-key {
@@ -74,13 +75,16 @@
     </head>
 
     <body>
-        <h1>웹 취약점 스캐너 레포트</h1>
+        <h1>웹 취약점 점검 레포트</h1>
 
         <div class="chart-container">
             <img src="vulnerability_chart.png" alt="Vulnerability Chart">
         </div>
 
+        <br>
+
         <div class="container">
+            <h3>Vulnerability Summary</h2>
             <table>
         <tr>
             <th>Vulnerability</th>
@@ -89,7 +93,10 @@
     <tr><td>Broken Access Control</td><td>7</td></tr><tr><td>Command Injection</td><td>1</td></tr><tr><td>Local File Inclusion</td><td>1</td></tr><tr><td>SQL Injection</td><td>1</td></tr><tr><td>Cross-site scripting</td><td>3</td></tr></table>
         </div>
 
+        <br>
+
         <div class="container">
+            <h3>Testing Information</h2>
             <table>
         <tr>
             <th style="width: 200px; max-width: 200px;">Vulnerability</th>
@@ -99,103 +106,94 @@
         </tr>
     
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/setup.php</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/setup.php'>http://localhost/setup.php</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/phpinfo.php</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/phpinfo.php'>http://localhost/phpinfo.php</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/login.php</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/login.php'>http://localhost/login.php</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/index.php</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/index.php'>http://localhost/index.php</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/php.ini</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/php.ini'>http://localhost/php.ini</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/security.php</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/security.php'>http://localhost/security.php</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Broken Access Control</td>
-                <td>http://localhost/about.php</td>
+                <td><strong>Broken Access Control</strong></td>
+                <td><a href='http://localhost/about.php'>http://localhost/about.php</a></td>
                 <td></td>
                 <td></td>
             </tr>
         
             <tr>
-                <td>Command Injection</td>
-                <td>http://localhost/vulnerabilities/exec/</td>
+                <td><strong>Command Injection</strong></td>
+                <td><a href='http://localhost/vulnerabilities/exec/'>http://localhost/vulnerabilities/exec/</a></td>
                 <td>post</td>
-                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>ip:</span> <span class='payload-value'>|cat&lt;/etc/passwd
-</span></div><br></div></td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>ip:</span> <span class='payload-value'>|cat&lt;/etc/passwd</span></div><br></div></td>
             </tr>
         
             <tr>
-                <td>Local File Inclusion</td>
-                <td>http://localhost/vulnerabilities/fi/?page=</td>
+                <td><strong>Local File Inclusion</strong></td>
+                <td><a href='http://localhost/vulnerabilities/fi/?page='>http://localhost/vulnerabilities/fi/?page=</a></td>
                 <td>get</td>
-                <td>http://localhost/vulnerabilities/fi/?page=file:///etc/passwd</td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>url:</span> <span class='payload-value'>http://localhost/vulnerabilities/fi/?page=file:///etc/passwd</span></div><br></div></td>
             </tr>
         
             <tr>
-                <td>SQL Injection</td>
-                <td>http://localhost/vulnerabilities/sqli/session-input.php</td>
+                <td><strong>SQL Injection</strong></td>
+                <td><a href='http://localhost/vulnerabilities/sqli/session-input.php'>http://localhost/vulnerabilities/sqli/session-input.php</a></td>
                 <td>post</td>
-                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>id:</span> <span class='payload-value'>1&#x27;/**/union select 1, hex(&quot;fu&quot; &quot;&quot; &quot;zz&quot;)-- xx
-</span></div><br><div class='payload-item'><span class='payload-key'>Submit:</span> <span class='payload-value'>Submit
-</span></div><br></div></td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>id:</span> <span class='payload-value'>1&#x27;/**/union select 1, hex(&quot;fu&quot; &quot;&quot; &quot;zz&quot;)-- xx</span></div><br><div class='payload-item'><span class='payload-key'>Submit:</span> <span class='payload-value'>Submit</span></div><br></div></td>
             </tr>
         
             <tr>
-                <td>Cross-site scripting</td>
-                <td>http://localhost/vulnerabilities/sqli/session-input.php</td>
+                <td><strong>Cross-site scripting</strong></td>
+                <td><a href='http://localhost/vulnerabilities/sqli/session-input.php'>http://localhost/vulnerabilities/sqli/session-input.php</a></td>
                 <td>post</td>
-                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>id:</span> <span class='payload-value'>&lt;iframe src=&quot;javascript:Boolean[atob(&#x27;Y29uc3RydWN0b3I&#x27;)](atob(&#x27;YWxlcnQoNjc3Nzcp&#x27;))()&quot;/&gt;click
-</span></div><br><div class='payload-item'><span class='payload-key'>Submit:</span> <span class='payload-value'>&lt;iframe src=&quot;javascript:Boolean[atob(&#x27;Y29uc3RydWN0b3I&#x27;)](atob(&#x27;YWxlcnQoNjc3Nzcp&#x27;))()&quot;/&gt;click
-</span></div><br></div></td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>id:</span> <span class='payload-value'>&lt;iframe src=&quot;javascript:Boolean[atob(&#x27;Y29uc3RydWN0b3I&#x27;)](atob(&#x27;YWxlcnQoNjc3Nzcp&#x27;))()&quot;/&gt;click</span></div><br><div class='payload-item'><span class='payload-key'>Submit:</span> <span class='payload-value'>&lt;iframe src=&quot;javascript:Boolean[atob(&#x27;Y29uc3RydWN0b3I&#x27;)](atob(&#x27;YWxlcnQoNjc3Nzcp&#x27;))()&quot;/&gt;click</span></div><br></div></td>
             </tr>
         
             <tr>
-                <td>Cross-site scripting</td>
-                <td>http://localhost/vulnerabilities/xss_r/</td>
+                <td><strong>Cross-site scripting</strong></td>
+                <td><a href='http://localhost/vulnerabilities/xss_r/'>http://localhost/vulnerabilities/xss_r/</a></td>
                 <td>get</td>
-                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>name:</span> <span class='payload-value'>&lt;embed type=&quot;text/html&quot; data=&quot;#&quot; onload=&quot;alert(67777)&quot;&gt;
-</span></div><br></div></td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>name:</span> <span class='payload-value'>&lt;embed type=&quot;text/html&quot; data=&quot;#&quot; onload=&quot;alert(67777)&quot;&gt;</span></div><br></div></td>
             </tr>
         
             <tr>
-                <td>Cross-site scripting</td>
-                <td>http://localhost/vulnerabilities/xss_s/</td>
+                <td><strong>Cross-site scripting</strong></td>
+                <td><a href='http://localhost/vulnerabilities/xss_s/'>http://localhost/vulnerabilities/xss_s/</a></td>
                 <td>post</td>
-                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>txtName:</span> <span class='payload-value'>document.body.innerHTML+=&quot;&lt;a href=&quot;#&quot;  id=&quot;fuzz&quot; onmousedown=&quot;\u{61}lert`67777`&quot;&gt;click&quot;;
-</span></div><br><div class='payload-item'><span class='payload-key'>btnSign:</span> <span class='payload-value'>document.body.innerHTML+=&quot;&lt;a href=&quot;#&quot;  id=&quot;fuzz&quot; onmousedown=&quot;\u{61}lert`67777`&quot;&gt;click&quot;;
-</span></div><br><div class='payload-item'><span class='payload-key'>btnClear:</span> <span class='payload-value'>document.body.innerHTML+=&quot;&lt;a href=&quot;#&quot;  id=&quot;fuzz&quot; onmousedown=&quot;\u{61}lert`67777`&quot;&gt;click&quot;;
-</span></div><br></div></td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>txtName:</span> <span class='payload-value'>document.body.innerHTML+=&quot;&lt;a href=&quot;#&quot;  id=&quot;fuzz&quot; onmousedown=&quot;\u{61}lert`67777`&quot;&gt;click&quot;;</span></div><br><div class='payload-item'><span class='payload-key'>btnSign:</span> <span class='payload-value'>document.body.innerHTML+=&quot;&lt;a href=&quot;#&quot;  id=&quot;fuzz&quot; onmousedown=&quot;\u{61}lert`67777`&quot;&gt;click&quot;;</span></div><br><div class='payload-item'><span class='payload-key'>btnClear:</span> <span class='payload-value'>document.body.innerHTML+=&quot;&lt;a href=&quot;#&quot;  id=&quot;fuzz&quot; onmousedown=&quot;\u{61}lert`67777`&quot;&gt;click&quot;;</span></div><br></div></td>
             </tr>
         </table>
         </div>

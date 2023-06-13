@@ -1,13 +1,4 @@
-import json
+import generate_report
 
-data = {
-    "Vulnerability": "Local File Inclusion",
-    "URL": "http://localhost/vulnerabilities/fi/?page=",
-    "Method": "get",
-    "Payload": "http://localhost/vulnerabilities/fi/?page=file:///etc/passwd"
-}
-
-print(json.dumps(data, indent=4))
-
-
-
+result_json = generate_report.load_json()
+generate_report.generate_report(result_json)
