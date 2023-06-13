@@ -24,9 +24,9 @@ def generate_report(results):
         </tr>
     """
     for result in results:
-        vulnerability = f"<strong>{html.escape(result['Vulnerability'])}</strong>"
+        vulnerability = html.escape(result['Vulnerability'])
         url = f"<a href='{html.escape(result['URL'])}'>{html.escape(result['URL'])}</a>"
-        method = html.escape(result['Method'])
+        method = html.escape(result['Method']).upper()
         payload = result['Payload']
 
         # Payload이 딕셔너리인 경우 한 줄에 한 개씩 상자로 표시
@@ -174,6 +174,7 @@ def generate_report(results):
         </div>
 
         <br>
+        <br>
 
         <div class="container">
             <h3>Vulnerability Summary</h2>
@@ -181,7 +182,8 @@ def generate_report(results):
         </div>
 
         <br>
-
+        <br>
+        
         <div class="container">
             <h3>Testing Information</h2>
             {testing_info}
