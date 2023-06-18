@@ -11,7 +11,6 @@ adminer-4.2.0.php
 administration
 adminer-4.6.0-mysql-pl.php
 adminer-3.2.2.zip
-log-in
 phppgadmin/
 editor-3.6.3.php
 moderator.htm
@@ -890,7 +889,6 @@ access
 sign-in.html
 adminer-3.0.0.php
 phpSQLiteAdmin/
-login.php
 \../\../\../\../\../\../\..//etc/passwd
 blogindex/
 adminer-4.2.4-mysql-sk.php
@@ -996,7 +994,6 @@ cgi-bin/login.aspx
 admin/login.aspx
 /phpMyAdmin-2.6.1-rc2
 super_login.htm
-/login.php
 sign-in.php
 administrators.html
 editor-4.6.0-pl.php
@@ -1018,7 +1015,6 @@ sub-login/
 editor-3.7.0-mysql-sk.php
 editor-4.2.5-en.php
 checklogin.aspx
-/login.php4
 /.htpasswd
 ./\/././\/././\/././\/.//etc/passwd
 /admin
@@ -1184,7 +1180,6 @@ affiliate
 editor-3.3.1-mysql-cs.php
 ..\..\..\..\..\..\..\..\/etc/passwd
 siteadmin.htm
-checklogin.php
 /phpMyAdmin-2.6.1-pl1
 controlpanel.htm
 /admin/~
@@ -1278,7 +1273,6 @@ ur-admin.php
 adminer-3.4.0-mysql-sk.php
 adminer-4.4.0.php
 ..//..//..//..///etc/passwd
-/wp-login.php
 editor-3.3.3-en.php
 editor-3.3.0.php
 admincp/login.php
@@ -1327,7 +1321,6 @@ editor-4.3.1-pl.php
 editor-4.3.0-mysql-sk.php
 .//..//.//..//.//..//.//..//.//..//.//..//.//..///etc/passwd
 adminer-4.0.2-en.php
-/login.php3
 authadmin
 editor-4.7.0-mysql-pl.php
 adminer-3.0.0-pl.php
@@ -2006,7 +1999,6 @@ editor-4.2.5-mysql.php
 adminer-4.7.9-mysql-en.php
 processlogin.aspx
 editor-4.3.0-en.php
-userlogin.php
 yonetim.htm
 user/
 adminer-3.6.3-cs.php

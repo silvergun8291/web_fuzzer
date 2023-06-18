@@ -242,7 +242,7 @@ def fuzzing():
 
             for form in forms:
                 form_details = crawler.get_form_details(form)
-                payloads = sql_injection.generate_payload(60)
+                payloads = sql_injection.generate_payload(70)
 
                 for payload in payloads:
                     result = sql_injection.submit_form(driver, form_details, url, payload)
@@ -277,7 +277,7 @@ def fuzzing():
 
             for form in forms:
                 form_details = xss.get_form_details(form)
-                payloads = xss.generate_payload(60)
+                payloads = xss.generate_payload(70)
 
                 for payload in payloads:
                     result = xss.submit_form(driver, form_details, url, payload)
