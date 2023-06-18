@@ -49,8 +49,9 @@ def generate_payload(urls, target_file, count) -> list[str]:  # 페이로드를 
                               utf16_wrapper(target_file), base64_wrapper(target_file)]
         }
 
+        lfi_fuzzer = GrammarFuzzer(LFI_Grammar)
+
         for _ in range(count):
-            lfi_fuzzer = GrammarFuzzer(LFI_Grammar)
             payload: str = lfi_fuzzer.fuzz()
             payloads.append(payload)
 

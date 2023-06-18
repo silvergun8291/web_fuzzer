@@ -202,30 +202,24 @@ def get_result_urls(target_domain: str, urls: list[str]) -> list[list[str], list
     asyncio.run(async_func(target_domain, directory_list, result1))
 
     result1 = list(set(result1))
-    print_result(result1)
     result_pages.extend(result1)
 
     # [2] 페이지 번호를 가지고 경로 순회
     result2: list[str] = []
     traversal_num(urls, result2)
-    print_result(result2)
 
     result_pages.extend(deduplicate(result2, urls))
 
     # [3] ID 값을 가지고 경로 순회
     result3: list[str] = []
     traversal_id(urls, result3)
-    print_result(result3)
 
     # 새롭게 찾은 페이지 중 크롤링한 결과에 없고 기존에 deprecated_pages에 없던 페이지만 deprecated_pages에 추가
     tmp = deduplicate(result3, urls)
     result_pages.extend(deduplicate(tmp, result_pages))
 
-    if 'http://localhost/logout.php' in result_pages:
-        result_pages.remove('http://localhost/logout.php')
-
-    if 'http://localhost/logout.php' in result_pages:
-        result_pages.remove('http://localhost/logout.php')
+    if 'http://localhost/' in result_pages:
+        result_pages.remove('http://localhost/')
 
     end_time = time()
     print_execution_time(start_time, end_time)

