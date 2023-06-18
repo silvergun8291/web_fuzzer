@@ -116,7 +116,7 @@ def bypass_with_python(payload: str) -> str:
 
 
 def bypass_with_command(payload: str) -> str:
-    return 'command ' + payload
+    return payload.replace('cat', 'command cat')
 
 
 def get_bypass_func() -> list[str]:

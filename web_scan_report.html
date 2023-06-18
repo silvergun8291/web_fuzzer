@@ -91,7 +91,7 @@
             <th>Vulnerability</th>
             <th>Count</th>
         </tr>
-    <tr><td>Broken Access Control</td><td>3</td></tr><tr><td>Command Injection</td><td>1</td></tr><tr><td>Local File Inclusion</td><td>1</td></tr><tr><td>SQL Injection</td><td>1</td></tr><tr><td>Cross-site scripting</td><td>3</td></tr></table>
+    <tr><td>Broken Access Control</td><td>3</td></tr><tr><td>Command Injection</td><td>1</td></tr><tr><td>Local File Inclusion</td><td>1</td></tr><tr><td>SQL Injection</td><td>1</td></tr><tr><td>Cross-site scripting</td><td>3</td></tr><tr><td colspan='4' style='text-align: right;'><b>Total:</b>  9  </td></tr></table>
         </div>
 
         <br>
@@ -132,7 +132,7 @@
                 <td>Command Injection</td>
                 <td><a href='http://localhost/vulnerabilities/exec/'>http://localhost/vulnerabilities/exec/</a></td>
                 <td>POST</td>
-                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>ip:</span> <span class='payload-value'>command |cat /etc/passwd</span></div><br></div></td>
+                <td><div class='payload-box'><div class='payload-item'><span class='payload-key'>ip:</span> <span class='payload-value'>|cat&lt;/etc/passwd</span></div><br></div></td>
             </tr>
         
             <tr>

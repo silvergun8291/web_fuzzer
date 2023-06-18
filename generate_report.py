@@ -87,6 +87,9 @@ def generate_report(results):
     """
     for vulnerability, count in vulnerability_counts.items():
         vulnerability_table += f"<tr><td>{vulnerability}</td><td>{count}</td></tr>"
+
+    total_count = sum(vulnerability_counts.values())
+    vulnerability_table += f"<tr><td colspan='4' style='text-align: right;'><b>Total:</b> {total_count} </td></tr>"
     vulnerability_table += "</table>"
 
     # HTML 템플릿 생성
@@ -200,7 +203,7 @@ def generate_report(results):
     # 그래프 이미지 파일로 저장
     plt.savefig('vulnerability_chart.png', bbox_inches='tight')
 
-    print("웹 취약점 스캐너 레포트가 생성되었습니다. web_scan_report.html 파일과 vulnerability_chart.png 파일을 확인하세요.")
+    print("웹 취약점 스캐너 레포트가 생성되었습니다. \nweb_scan_report.html 파일과 vulnerability_chart.png 파일을 확인하세요.")
 
 
 if __name__ == '__main__':
