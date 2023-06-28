@@ -100,6 +100,7 @@ def submit_form(driver, form_details, url, value) -> dict:
             driver.get(base_url)
             page_source = driver.page_source
 
+            # 페이지에 "fuzz" 또는 "66757A7A" 문자열이 있는지 확인하여 공격 성공 유무 판단
             if ("fuzz" in page_source) or ("66757A7A" in page_source):
                 result["Vulnerability"] = "SQL Injection"
                 result["URL"] = url

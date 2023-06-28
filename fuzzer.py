@@ -19,13 +19,16 @@ def input_target_url() -> str:
 
 
 def input_login_url() -> str:
-    login: str = input("Login is required? (y/n): ")
+    while True:
+        login: str = input("Login is required? (y/n): ")
 
-    if login == 'y':
-        url = input("Enter Login URL: ")
-        return url
-    else:
-        return ''
+        if login == 'y':
+            url = input("Enter Login URL: ")
+            return url
+        elif login == 'n':
+            return ''
+        else:
+            print('Please enter y/n.')
 
 
 def input_id_pw() -> list[str, str]:
@@ -114,8 +117,9 @@ def fuzzing():
     # 로그인 URL 입력 받기
     login_url: str = input_login_url()
 
-    # 로그인 정보 입력 받기
-    id, pw = input_id_pw()
+    if login_url != '':
+        # 로그인 정보 입력 받기
+        id, pw = input_id_pw()
 
     # 로그인
     if login_url != '':
