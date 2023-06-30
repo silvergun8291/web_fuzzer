@@ -23,6 +23,8 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv
 pyenv install 3.10.11 
 ```
 
+<br>
+
 # Tutorial
 
 ### DVWA Pull
@@ -43,7 +45,7 @@ PW : password
 
 http://localhost/setup.php
 
-Create / Reset Database
+`Create / Reset Database`
 
 
 ### Docker Commit
