@@ -3,7 +3,7 @@ from urllib.parse import *
 from fuzzingbook.WebFuzzer import *
 from selenium.common import NoSuchElementException, NoAlertPresentException
 from selenium.webdriver.common.by import By
-from command_injection_bypass import *
+from .command_injection_bypass import *
 import random
 
 

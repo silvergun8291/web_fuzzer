@@ -4,19 +4,18 @@ import re
 import os
 import webbrowser
 from tqdm import tqdm
-import crawler
-import xss
-import sql_injection
-import command_injection
-import broken_access_control
-import lfi
-import generate_report
+from .crawler import crawler
+from .vulnerabilities import xss
+from .vulnerabilities import sql_injection
+from .vulnerabilities import command_injection
+from .vulnerabilities import broken_access_control
+from .vulnerabilities import lfi
+from .doc import generate_report
 
 
 def input_target_url() -> str:
     url: str = input("Enter Target URL: ")
     return url
-
 
 def input_login_url() -> str:
     while True:
@@ -30,13 +29,11 @@ def input_login_url() -> str:
         else:
             print('Please enter y/n.')
 
-
 def input_id_pw() -> list[str, str]:
     id: str = input("Enter ID: ")
     pw: str = input("Enter PW: ")
 
     return [id, pw]
-
 
 def function_start(name: str) -> None:  # 함수명을 출력해주는 함수
     print('\n')
@@ -44,12 +41,10 @@ def function_start(name: str) -> None:  # 함수명을 출력해주는 함수
     print(" " * 40 + name + " " * 40)
     print("#" * 100)
 
-
 def change_security(cookies, security):  # 쿠키 수정을 통해 DVWA security 단계 조절
     cookies['security'] = security
 
     return cookies
-
 
 def dvwa(urls) -> list[str]:
     tmp_list: list[str] = []
@@ -73,18 +68,15 @@ def dvwa(urls) -> list[str]:
 
     return results
 
-
 def print_urls(urls):
     for url in urls:
         print(url)
     print()
 
-
 def print_result(results):
     for result in results:
         print(f'\n{json.dumps(result, indent=4)}')
     print()
-
 
 def make_reuslt_file(testing_result):
     output_file = "Testing_Result.json"
@@ -92,7 +84,6 @@ def make_reuslt_file(testing_result):
     # JSON 파일로 데이터 저장
     with open(output_file, 'w') as json_file:
         json.dump(testing_result, json_file)
-
 
 def show_report():
     file_path = './web_scan_report.html'
@@ -104,8 +95,7 @@ def show_report():
     # 웹 브라우저로 HTML 파일 열기
     webbrowser.open('file://' + absolute_path)
 
-
-def fuzzing():
+def main():
     start_time = time.time()
 
     testing_result = []
@@ -308,6 +298,5 @@ def fuzzing():
 
     driver.quit()
 
-
 if __name__ == "__main__":
-    fuzzing()
+    main()
