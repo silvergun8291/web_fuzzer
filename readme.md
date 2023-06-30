@@ -12,6 +12,10 @@ poetry install
 poetry run start
 ```
 
+### Chrome
+
+Chrome is neccessary!
+
 ### pyenv
 
 ```sh
