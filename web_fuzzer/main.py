@@ -13,8 +13,6 @@ from .vulnerabilities import lfi
 from .doc import generate_report
 
 
-VULNERABILITIES_TO_DETECT = [bac, ci]
-
 def input_target_url() -> str:
     url: str = input("Enter Target URL: ")
     return url
@@ -136,62 +134,60 @@ def main():
     print_urls(urls)
 
 
-    def bac():
-        # [1] Broken Access Control
-        broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
-        bac_result = []
+    # [1] Broken Access Control
+    broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
+    bac_result = []
 
-        for page in broken_access_control_pages:
-            result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
-            bac_result.append(result)
-            testing_result.append(result)
+    for page in broken_access_control_pages:
+        result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
+        bac_result.append(result)
+        testing_result.append(result)
 
-        print_result(bac_result)
-        urls = dvwa(urls)  # 공격 타겟을 제한
+    print_result(bac_result)
+    urls = dvwa(urls)  # 공격 타겟을 제한
 
-        # 로그인
-        if login_url != '':
-            crawler.login(driver, login_url, id, pw)
+    # 로그인
+    if login_url != '':
+        crawler.login(driver, login_url, id, pw)
 
-        time.sleep(2)
-        print()
+    time.sleep(2)
+    print()
 
 
-    def ci():
-        # [2] Command Injection
-        function_start("Command Injection")
+    # [2] Command Injection
+    function_start("Command Injection")
 
-        with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
-            ci_result = []
+    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
+        ci_result = []
 
-            for url in urls:
-                if not command_injection.check_attackable(driver, url):
-                    continue
+        for url in urls:
+            if not command_injection.check_attackable(driver, url):
+                continue
 
-                # form tag 수집
-                driver.get(url)
-                forms = crawler.get_forms(url, cookies)
+            # form tag 수집
+            driver.get(url)
+            forms = crawler.get_forms(url, cookies)
 
-                for form in forms:
-                    form_details = crawler.get_form_details(form)
-                    payloads = command_injection.generate_payload(50)
+            for form in forms:
+                form_details = crawler.get_form_details(form)
+                payloads = command_injection.generate_payload(50)
 
-                    for payload in payloads:
-                        result = command_injection.submit_form(driver, form_details, url, payload)
+                for payload in payloads:
+                    result = command_injection.submit_form(driver, form_details, url, payload)
 
-                        if result["Vulnerability"] != "":
-                            ci_result.append(result)
-                            testing_result.append(result)
-                            break
+                    if result["Vulnerability"] != "":
+                        ci_result.append(result)
+                        testing_result.append(result)
+                        break
 
-                pbar.update(1)
+            pbar.update(1)
 
-            pbar.update(len(urls))
+        pbar.update(len(urls))
 
-            print_result(ci_result)
+        print_result(ci_result)
 
-        time.sleep(2)
-        print()
+    time.sleep(2)
+    print()
 
 
     # [3] Local File Inclusion
