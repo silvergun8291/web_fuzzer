@@ -21,7 +21,7 @@ pyenv install 3.10.11
 
 # Tutorial
 
-### DVWA
+### DVWA Pull
 
 ```sh
 docker pull vulnerables/web-dvwa
@@ -39,4 +39,21 @@ PW : password
 
 http://localhost/setup.php
 
-Create / Reset Database:q:q:Qqqqqq
+Create / Reset Database
+
+
+### Docker Commit
+
+```sh
+docker ps -all
+docker commit [CONTAINER ID] vulnerables/web-dvwa
+```
+
+### DVWA Start
+
+```sh
+docker run --rm -it -p 80:80 vulnerables/web-dvwa
+```
+
+
+
