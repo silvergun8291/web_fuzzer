@@ -1,5 +1,5 @@
 from fuzzingbook.WebFuzzer import *
-from lfi_bypass import *
+from .lfi_bypass import *
 
 
 def find_target_url(urls) -> list[str]:  # LFI 공격이 가능한 URL을 찾는 함수
