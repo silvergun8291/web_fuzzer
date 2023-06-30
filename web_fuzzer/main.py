@@ -12,6 +12,7 @@ from .vulnerabilities import broken_access_control
 from .vulnerabilities import lfi
 from .doc import generate_report
 
+
 def input_target_url() -> str:
     url: str = input("Enter Target URL: ")
     return url
@@ -95,7 +96,6 @@ def show_report():
     webbrowser.open('file://' + absolute_path)
 
 def main():
-    # 실행 시간 측정 시작
     start_time = time.time()
 
     testing_result = []
