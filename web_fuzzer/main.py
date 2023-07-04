@@ -79,7 +79,7 @@ def print_result(results):
     print()
 
 def make_result_file(testing_result):
-    output_file = "Testing_Result.json"
+    output_file = "test/example/dvwa/Testing_Result.json"
 
     # JSON 파일로 데이터 저장
     with open(output_file, 'w') as json_file:
