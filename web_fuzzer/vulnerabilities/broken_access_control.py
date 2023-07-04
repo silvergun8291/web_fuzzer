@@ -4,9 +4,9 @@ import aiohttp
 import re
 import requests
 from tqdm import tqdm
+import os
 
-directory_list_path: str = './dictionary_file.txt'
-
+directory_list_path: str = 'static/dictionary/url.dictionary.txt'
 
 def print_execution_time(start_time, end_time):  # 실행 시간 출력 함수
     elapsed_time = end_time - start_time

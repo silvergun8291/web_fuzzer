@@ -4,13 +4,13 @@ import re
 import os
 import webbrowser
 from tqdm import tqdm
-from .crawler import crawler
-from .vulnerabilities import xss
-from .vulnerabilities import sql_injection
-from .vulnerabilities import command_injection
-from .vulnerabilities import broken_access_control
-from .vulnerabilities import lfi
-from .doc import generate_report
+from crawler import crawler
+from vulnerabilities import xss
+from vulnerabilities import sql_injection
+from vulnerabilities import command_injection
+from vulnerabilities import broken_access_control
+from vulnerabilities import lfi
+from doc import generate_report
 
 
 def input_target_url() -> str:
