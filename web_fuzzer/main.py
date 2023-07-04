@@ -78,7 +78,7 @@ def print_result(results):
         print(f'\n{json.dumps(result, indent=4)}')
     print()
 
-def make_reuslt_file(testing_result):
+def make_result_file(testing_result):
     output_file = "Testing_Result.json"
 
     # JSON 파일로 데이터 저장
@@ -287,7 +287,7 @@ def main():
 
         print_result(xss_result)
 
-    make_reuslt_file(testing_result)
+    make_result_file(testing_result)
     result_json = generate_report.load_json()
     generate_report.generate_report(result_json)
     show_report()
