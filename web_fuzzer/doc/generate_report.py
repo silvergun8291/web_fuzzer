@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 def load_json():
-    json_file = './Testing_Result.json'
+    json_file = 'test/example/dvwa/Testing_Result.json'
 
     with open(json_file, 'r') as f:
         data = json.load(f)
@@ -197,13 +197,13 @@ def generate_report(results):
     """
 
     # HTML 파일로 저장
-    with open('web_scan_report.html', 'w', encoding='utf-8') as f:
+    with open('test/example/dvwa/web_scan_report.html', 'w', encoding='utf-8') as f:
         f.write(html_template.format(vulnerability_table=vulnerability_table, testing_info=testing_info))
 
     # 그래프 이미지 파일로 저장
-    plt.savefig('vulnerability_chart.png', bbox_inches='tight')
+    plt.savefig('test/example/dvwa/vulnerability_chart.png', bbox_inches='tight')
 
-    print("웹 취약점 스캐너 레포트가 생성되었습니다. \nweb_scan_report.html 파일과 vulnerability_chart.png 파일을 확인하세요.")
+    print("웹 취약점 스캐너 레포트가 생성되었습니다. \ntest/example/dvwa/web_scan_report.html 파일과 test/example/dvwa/vulnerability_chart.png 파일을 확인하세요.")
 
 
 if __name__ == '__main__':

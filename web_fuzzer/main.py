@@ -86,7 +86,7 @@ def make_result_file(testing_result):
         json.dump(testing_result, json_file)
 
 def show_report():
-    file_path = './web_scan_report.html'
+    file_path = '../test/example/dvwa/web_scan_report.html'
 
     # HTML 파일의 절대 경로를 얻기 위해 현재 작업 디렉터리를 사용합니다
     current_dir = os.path.dirname(os.path.abspath(__file__))
