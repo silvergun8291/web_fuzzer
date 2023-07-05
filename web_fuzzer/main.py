@@ -12,6 +12,7 @@ from vulnerabilities import broken_access_control
 from vulnerabilities import lfi
 from doc import generate_report
 
+DEBUG = True
 
 def input_target_url() -> str:
     url: str = input("Enter Target URL: ")
@@ -102,14 +103,14 @@ def main():
     driver = crawler.load_driver()
 
     # 타겟 URL 입력 받기
-    base_url: str = input_target_url()
+    base_url: str = "http://localhost" if DEBUG else input_target_url()
 
     # 로그인 URL 입력 받기
-    login_url: str = input_login_url()
+    login_url: str = "http://localhost/login.php" if DEBUG else input_login_url()
 
     if login_url != '':
         # 로그인 정보 입력 받기
-        id, pw = input_id_pw()
+        id, pw = "admin", "password" if DEBUG else input_id_pw()
 
     # 로그인
     if login_url != '':
