@@ -14,6 +14,18 @@ from doc import generate_report
 
 DEBUG = True
 
+VULN_DETECTORS_TO_DEBUG = {
+    "BAC": True,
+    "CI": True,
+    "LFI": True, 
+    "SQLI": True,
+    "XSS": True
+}
+
+def check_detector_to_debug(vuln_dectector):
+    return VULN_DETECTORS_TO_DEBUG[vuln_dectector.__name__]
+
+
 def input_target_url() -> str:
     url: str = input("Enter Target URL: ")
     return url
@@ -96,6 +108,166 @@ def show_report():
     # 웹 브라우저로 HTML 파일 열기
     webbrowser.open('file://' + absolute_path)
 
+
+# [1] Broken Access Control
+def BAC(base_url, urls, testing_result, driver, id, pw, login_url):
+
+    broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
+    bac_result = []
+
+    for page in broken_access_control_pages:
+        result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
+        bac_result.append(result)
+        testing_result.append(result)
+
+    print_result(bac_result)
+
+    # 로그인
+    if login_url != '':
+        crawler.login(driver, login_url, id, pw)
+
+    time.sleep(2)
+    print()
+
+
+# [2] Command Injection
+def CI(driver, urls, cookies, testing_result):
+    function_start("Command Injection")
+
+    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
+        ci_result = []
+
+        for url in urls:
+            if not command_injection.check_attackable(driver, url):
+                continue
+
+            # form tag 수집
+            driver.get(url)
+            forms = crawler.get_forms(url, cookies)
+
+            for form in forms:
+                form_details = crawler.get_form_details(form)
+                payloads = command_injection.generate_payload(50)
+
+                for payload in payloads:
+                    result = command_injection.submit_form(driver, form_details, url, payload)
+
+                    if result["Vulnerability"] != "":
+                        ci_result.append(result)
+                        testing_result.append(result)
+                        break
+
+            pbar.update(1)
+
+        pbar.update(len(urls))
+
+        print_result(ci_result)
+
+    time.sleep(2)
+    print()
+
+
+# [3] Local File Inclusion
+def LFI(urls, driver, testing_result):
+    function_start("Local File Inclusion")
+
+    target_urls = lfi.find_target_url(urls)
+    target_file = 'etc/passwd'
+
+    target_path = lfi.get_target_path(target_file)
+    payloads = lfi.generate_payload(urls, target_file, 50)
+
+    with tqdm(total=len(target_urls), ncols=100, desc="Local File Inclusion", mininterval=0.1) as pbar:
+        lfi_result = []
+
+        for url in target_urls:
+            for payload in payloads:
+                result = lfi.detect_lfi(driver, url, payload)
+
+                if result["Vulnerability"] != "":
+                    lfi_result.append(result)
+                    testing_result.append(result)
+                    break
+
+            pbar.update(1)
+
+        pbar.update(len(urls))
+
+        print_result(lfi_result)
+
+    time.sleep(2)
+    print()
+
+
+# [4] SQL Injection
+def SQLI(urls, driver, cookies, testing_result):
+    function_start("SQL Injection")
+
+    with tqdm(total=len(urls), ncols=100, desc="SQL Injection", mininterval=0.1) as pbar:
+        si_result = []
+
+        for url in urls:
+            if not sql_injection.check_attackable(driver, url):
+                continue
+
+            driver.get(url)
+            forms = crawler.get_forms(url, cookies)
+
+            for form in forms:
+                form_details = crawler.get_form_details(form)
+                payloads = sql_injection.generate_payload(70)
+
+                for payload in payloads:
+                    result = sql_injection.submit_form(driver, form_details, url, payload)
+
+                    if result["Vulnerability"] != "":
+                        si_result.append(result)
+                        testing_result.append(result)
+                        break
+
+            pbar.update(1)
+
+        pbar.update(len(urls))
+
+        print_result(si_result)
+
+    time.sleep(2)
+    print()
+
+
+# [5] Cross Site Scripting
+def XSS(urls, driver, cookies, testing_result):
+    function_start('Cross Site Scripting')
+
+    with tqdm(total=len(urls), ncols=100, desc="Cross Site Scripting", mininterval=0.1) as pbar:
+        xss_result = []
+
+        for url in urls:
+            if not xss.check_attackable(driver, url):
+                continue
+
+            driver.get(url)
+            forms = crawler.get_forms(url, cookies)
+
+            for form in forms:
+                form_details = xss.get_form_details(form)
+                payloads = xss.generate_payload(70)
+
+                for payload in payloads:
+                    result = xss.submit_form(driver, form_details, url, payload)
+
+                    if result["Vulnerability"] != "":
+                        xss_result.append(result)
+                        testing_result.append(result)
+                        break
+
+            pbar.update(1)
+
+        pbar.update(len(urls))
+
+        print_result(xss_result)
+
+
 def main():
     start_time = time.time()
 
@@ -132,161 +304,19 @@ def main():
     # [0] 타겟 페이지 크롤링
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
+    urls = dvwa(urls)  # 공격 타겟을 제한
     print_urls(urls)
 
+    ARGS = {
+        "BAC": (base_url, urls, testing_result, driver, id, pw, login_url),
+        "CI": (driver, urls, cookies, testing_result),
+        "LFI": (urls, driver, testing_result),
+        "SQLI": (urls, driver, cookies, testing_result),
+        "XSS": (urls, driver, cookies, testing_result)
+    }
 
-    # [1] Broken Access Control
-    broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
-    bac_result = []
-
-    for page in broken_access_control_pages:
-        result = {"Vulnerability": "Broken Access Control", "URL": page, "Method": '', "Payload": ''}
-        bac_result.append(result)
-        testing_result.append(result)
-
-    print_result(bac_result)
-    urls = dvwa(urls)  # 공격 타겟을 제한
-
-    # 로그인
-    if login_url != '':
-        crawler.login(driver, login_url, id, pw)
-
-    time.sleep(2)
-    print()
-
-
-    # [2] Command Injection
-    function_start("Command Injection")
-
-    with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
-        ci_result = []
-
-        for url in urls:
-            if not command_injection.check_attackable(driver, url):
-                continue
-
-            # form tag 수집
-            driver.get(url)
-            forms = crawler.get_forms(url, cookies)
-
-            for form in forms:
-                form_details = crawler.get_form_details(form)
-                payloads = command_injection.generate_payload(50)
-
-                for payload in payloads:
-                    result = command_injection.submit_form(driver, form_details, url, payload)
-
-                    if result["Vulnerability"] != "":
-                        ci_result.append(result)
-                        testing_result.append(result)
-                        break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
-
-        print_result(ci_result)
-
-    time.sleep(2)
-    print()
-
-
-    # [3] Local File Inclusion
-    function_start("Local File Inclusion")
-
-    target_urls = lfi.find_target_url(urls)
-    target_file = 'etc/passwd'
-
-    target_path = lfi.get_target_path(target_file)
-    payloads = lfi.generate_payload(urls, target_file, 50)
-
-    with tqdm(total=len(target_urls), ncols=100, desc="Local File Inclusion", mininterval=0.1) as pbar:
-        lfi_result = []
-
-        for url in target_urls:
-            for payload in payloads:
-                result = lfi.detect_lfi(driver, url, payload)
-
-                if result["Vulnerability"] != "":
-                    lfi_result.append(result)
-                    testing_result.append(result)
-                    break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
-
-        print_result(lfi_result)
-
-    time.sleep(2)
-    print()
-
-
-    # [4] SQL Injection
-    function_start("SQL Injection")
-
-    with tqdm(total=len(urls), ncols=100, desc="SQL Injection", mininterval=0.1) as pbar:
-        si_result = []
-
-        for url in urls:
-            if not sql_injection.check_attackable(driver, url):
-                continue
-
-            driver.get(url)
-            forms = crawler.get_forms(url, cookies)
-
-            for form in forms:
-                form_details = crawler.get_form_details(form)
-                payloads = sql_injection.generate_payload(70)
-
-                for payload in payloads:
-                    result = sql_injection.submit_form(driver, form_details, url, payload)
-
-                    if result["Vulnerability"] != "":
-                        si_result.append(result)
-                        testing_result.append(result)
-                        break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
-
-        print_result(si_result)
-
-    time.sleep(2)
-    print()
-
-
-    # [5] Cross Site Scripting
-    function_start('Cross Site Scripting')
-
-    with tqdm(total=len(urls), ncols=100, desc="Cross Site Scripting", mininterval=0.1) as pbar:
-        xss_result = []
-
-        for url in urls:
-            if not xss.check_attackable(driver, url):
-                continue
-
-            driver.get(url)
-            forms = crawler.get_forms(url, cookies)
-
-            for form in forms:
-                form_details = xss.get_form_details(form)
-                payloads = xss.generate_payload(70)
-
-                for payload in payloads:
-                    result = xss.submit_form(driver, form_details, url, payload)
-
-                    if result["Vulnerability"] != "":
-                        xss_result.append(result)
-                        testing_result.append(result)
-                        break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
-
-        print_result(xss_result)
+    for func in filter(check_detector_to_debug, [BAC, CI, LFI, SQLI, XSS]):
+        func(*ARGS[func.__name__])
 
     make_result_file(testing_result)
     result_json = generate_report.load_json()
