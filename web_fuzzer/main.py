@@ -15,11 +15,11 @@ from doc import generate_report
 DEBUG = True
 
 VULN_DETECTORS_TO_DEBUG = {
-    "BAC": True,
-    "CI": True, # bugs in here
-    "LFI": True, 
+    "BAC": False,
+    "CI": False, # bugs in here
+    "LFI": False, 
     "SQLI": True, # bugs in here
-    "XSS": True
+    "XSS": False
 }
 
 def check_detector_to_debug(vuln_dectector):
@@ -197,7 +197,7 @@ def LFI(urls, driver, testing_result):
 
 
 # [4] SQL Injection
-def SQLI(urls, driver, cookies):
+def SQLI(urls, driver, cookies, testing_result):
     function_start("SQL Injection")
 
     with tqdm(total=len(urls), ncols=100, desc="SQL Injection", mininterval=0.1) as pbar:
@@ -308,7 +308,7 @@ def main():
         "BAC": (base_url, urls, testing_result, driver, id, pw, login_url),
         "CI": (driver, urls, cookies, testing_result),
         "LFI": (urls, driver, testing_result),
-        "SQLI": (urls, driver, cookies),
+        "SQLI": (urls, driver, cookies, testing_result),
         "XSS": (urls, driver, cookies, testing_result)
     }
 
