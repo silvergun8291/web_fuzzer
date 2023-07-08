@@ -4,13 +4,13 @@ import re
 import os
 import webbrowser
 from tqdm import tqdm
-from .crawler import crawler
-from .vulnerabilities import xss
-from .vulnerabilities import sql_injection
-from .vulnerabilities import command_injection
-from .vulnerabilities import broken_access_control
-from .vulnerabilities import lfi
-from .doc import generate_report
+from crawler import crawler
+from vulnerabilities import xss
+from vulnerabilities import sql_injection
+from vulnerabilities import command_injection
+from vulnerabilities import broken_access_control
+from vulnerabilities import lfi
+from doc import generate_report
 
 
 def input_target_url() -> str:
@@ -78,15 +78,15 @@ def print_result(results):
         print(f'\n{json.dumps(result, indent=4)}')
     print()
 
-def make_reuslt_file(testing_result):
-    output_file = "Testing_Result.json"
+def make_result_file(testing_result):
+    output_file = "./test/example/dvwa/Testing_Result.json"
 
     # JSON 파일로 데이터 저장
     with open(output_file, 'w') as json_file:
         json.dump(testing_result, json_file)
 
 def show_report():
-    file_path = './web_scan_report.html'
+    file_path = '../test/example/dvwa/web_scan_report.html'
 
     # HTML 파일의 절대 경로를 얻기 위해 현재 작업 디렉터리를 사용합니다
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -287,7 +287,7 @@ def main():
 
         print_result(xss_result)
 
-    make_reuslt_file(testing_result)
+    make_result_file(testing_result)
     result_json = generate_report.load_json()
     generate_report.generate_report(result_json)
     show_report()
