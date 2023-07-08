@@ -15,15 +15,16 @@ from doc import generate_report
 DEBUG = True
 
 VULN_DETECTORS_TO_DEBUG = {
-    "BAC": False,
-    "CI": False, # bugs in here
-    "LFI": False, 
-    "SQLI": True, # bugs in here
-    "XSS": False
+    "BAC": True,
+    "CI": True,
+    "LFI": True, 
+    "SQLI": True,
+    "XSS": True
 }
 
 def check_detector_to_debug(vuln_dectector):
     return VULN_DETECTORS_TO_DEBUG[vuln_dectector.__name__]
+
 
 def input_target_url() -> str:
     url: str = input("Enter Target URL: ")
@@ -107,8 +108,10 @@ def show_report():
     # 웹 브라우저로 HTML 파일 열기
     webbrowser.open('file://' + absolute_path)
 
+
 # [1] Broken Access Control
 def BAC(base_url, urls, testing_result, driver, id, pw, login_url):
+
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
     bac_result = []
 
