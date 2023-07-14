@@ -13,7 +13,7 @@ def find_target_url(urls) -> list[str]:  # LFI 공격이 가능한 URL을 찾는
         target: str = parsed_url[-1]  # 가장 마지막 '/' 오른쪽에 있는 문자열 추출
 
         # 위에서 추출한 문자열이 공백이 아니고 '?' 로 시작하고 '=' 가 있으면
-        if (target != '') and (target[0] == '?') and ('=' in target):
+        if (target != '') and ('?' in target) and ('=' in target):
             index = url.rfind('=')  # 문자열 뒤에서 부터 '=' 가 있는지 탐색하여 인덱스 반환
 
             target_urls.append(url[:index + 1])  # target_urls에 원본 URL에서 타겟 URL만 잘라서 저장
