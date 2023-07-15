@@ -90,7 +90,9 @@ docker commit [CONTAINER ID] vulnerables/web-dvwa
 
 ## Contact
 
-If you need to get in-touch with me ([silvergun8291](https://github.com/silvergun8291) – lead developer), please do so at the following email address: sv5506829sv@gmail.com
+If you need to get in-touch with me ([silvergun8291](https://github.com/silvergun8291) – lead developer), 
+
+please do so at the following email address: sv5506829sv@gmail.com
 
 ## Copyright
 
