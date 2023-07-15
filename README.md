@@ -30,17 +30,10 @@ Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv
 pyenv install 3.10.11 
 ```
 
-### clone
-
-```sh
-git clone https://github.com/silvergun8291/web_fuzzer.git
-cd web_fuzzer
-```
-
 ### install dependency
 
 ```sh 
-pip install -r web_fuzzer/requirements.txt
+pip install -r requirements.txt
 ```
 
 ### chrome
