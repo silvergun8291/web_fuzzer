@@ -17,8 +17,8 @@
 
 </div>
 
-### Difference 
-TBA
+Our Web Fuzzer is consist of Grammar Fuzzer inside. 
+Unlike dictionary based fuzzer, our payloads are more various and effective.
 
 ## Install
 For now, our Web Fuzzer supports only Windows.
