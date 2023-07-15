@@ -50,6 +50,7 @@ then you can enter information of your target that you want to investigate
 ### DVWA
 if you don't have any target for security testing, here's DVWA for you.
 
+To do that, edit DEBUG value in main.py from `DEBUG = False` to `DEBUG = True`
 
 ```sh
 docker pull vulnerables/web-dvwa

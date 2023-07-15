@@ -53,10 +53,10 @@ def change_security(cookies, security):  # 쿠키 수정을 통해 DVWA security
 
     return cookies
 
-def dvwa(urls) -> list[str]:
+def dvwa(base_url, urls) -> list[str]:
     tmp_list: list[str] = []
     results: list[str] = []
-    base_pattern = r"http://localhost/vulnerabilities/"
+    base_pattern = base_url + r"/vulnerabilities/"
 
     for url in urls:
         if url.endswith("/#"):
@@ -299,7 +299,8 @@ def main():
     # [0] 타겟 페이지 크롤링
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
-    urls = dvwa(urls)  # 공격 타겟을 제한
+
+    if DEBUG: dvwa(base_url, urls)  # 공격 타겟을 제한
     print_urls(urls)
 
     ARGS = {
