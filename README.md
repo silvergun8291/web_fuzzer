@@ -72,8 +72,8 @@ docker commit [CONTAINER ID] vulnerables/web-dvwa
 
 ## Roadmap
 
-- [] support linux (handling new window)
-- [] folder path hardcorded -> dynamic path using os.path module
+- [ ] support linux (handling new window)
+- [ ] folder path hardcorded -> dynamic path using os.path module
 
 ### Features
 
