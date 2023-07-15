@@ -12,12 +12,12 @@ from vulnerabilities import broken_access_control
 from vulnerabilities import lfi
 from doc import generate_report
 
-DEBUG = True
+DEBUG = False
 
 VULN_DETECTORS_TO_DEBUG = {
     "BAC": True,
     "CI": True,
-    "LFI": True, 
+    "LFI": True,
     "SQLI": True,
     "XSS": True
 }
@@ -41,12 +41,6 @@ def input_login_url() -> str:
             return ''
         else:
             print('Please enter y/n.')
-
-def input_id_pw() -> list[str, str]:
-    id: str = input("Enter ID: ")
-    pw: str = input("Enter PW: ")
-
-    return [id, pw]
 
 def function_start(name: str) -> None:  # 함수명을 출력해주는 함수
     print('\n')
@@ -282,7 +276,8 @@ def main():
 
     if login_url != '':
         # 로그인 정보 입력 받기
-        id, pw = "admin", "password" if DEBUG else input_id_pw()
+        id: str = "admin" if DEBUG else input("Enter ID: ")
+        pw: str = "password" if DEBUG else input("Enter PW: ")
 
     # 로그인
     if login_url != '':
@@ -315,7 +310,10 @@ def main():
         "XSS": (urls, driver, cookies, testing_result)
     }
 
-    for func in filter(check_detector_to_debug, [BAC, CI, LFI, SQLI, XSS]):
+    detectors = [BAC, CI, LFI, SQLI, XSS]
+    detectors = filter(check_detector_to_debug, detectors) if DEBUG else detectors
+
+    for func in detectors:
         func(*ARGS[func.__name__])
 
     make_result_file(testing_result)
