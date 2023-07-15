@@ -15,37 +15,6 @@
     
 ### ![chart](./test/example/dvwa/vulnerability_chart.png)
 
-<table>
-    <tr>
-    <th>Vulnerability</th>
-    <th>Count</th>
-    </tr>
-    <tr>
-    <td>Broken Access Control</td>
-    <td>3</td>
-    </tr>
-    <tr>
-    <td>Command Injection</td>
-    <td>1</td>
-    </tr>
-    <tr>
-    <td>Local File Inclusion</td>
-    <td>1</td>
-    </tr>
-    <tr>
-    <td>SQL Injection</td>
-    <td>1</td>
-    </tr>
-    <tr>
-    <td>Cross-site scripting</td>
-    <td>3</td>
-    </tr>
-    <tr>
-    <td colspan='4' style='text-align: right;'>
-        <b>Total:</b> 9
-    </td>
-    </tr>
-</table>
 </div>
 
 ### Difference 
