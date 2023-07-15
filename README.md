@@ -12,45 +12,44 @@
         •
         <a href="#copyright">Copyright</a>
     </h4>
-</div>
-
+    
 ### ![chart](./test/example/dvwa/vulnerability_chart.png)
-<div align="center">
-    <table>
-        <tr>
-        <th>Vulnerability</th>
-        <th>Count</th>
-        </tr>
-        <tr>
-        <td>Broken Access Control</td>
-        <td>3</td>
-        </tr>
-        <tr>
-        <td>Command Injection</td>
-        <td>1</td>
-        </tr>
-        <tr>
-        <td>Local File Inclusion</td>
-        <td>1</td>
-        </tr>
-        <tr>
-        <td>SQL Injection</td>
-        <td>1</td>
-        </tr>
-        <tr>
-        <td>Cross-site scripting</td>
-        <td>3</td>
-        </tr>
-        <tr>
-        <td colspan='4' style='text-align: right;'>
-            <b>Total:</b> 9
-        </td>
-        </tr>
-    </table>
+
+<table>
+    <tr>
+    <th>Vulnerability</th>
+    <th>Count</th>
+    </tr>
+    <tr>
+    <td>Broken Access Control</td>
+    <td>3</td>
+    </tr>
+    <tr>
+    <td>Command Injection</td>
+    <td>1</td>
+    </tr>
+    <tr>
+    <td>Local File Inclusion</td>
+    <td>1</td>
+    </tr>
+    <tr>
+    <td>SQL Injection</td>
+    <td>1</td>
+    </tr>
+    <tr>
+    <td>Cross-site scripting</td>
+    <td>3</td>
+    </tr>
+    <tr>
+    <td colspan='4' style='text-align: right;'>
+        <b>Total:</b> 9
+    </td>
+    </tr>
+</table>
 </div>
 
 ### Difference 
-The [Triumph Mayflower Club](https://www.triumphmayflowerclub.com/) is an organisation dedicated to the preservation of classic 1950s car, the Mayflower, by British car manufacturer Triumph. The club itself formed in 1974 and made its initial, limited foray into the World Wide Web back in [2005](https://legacy.triumphmayflowerclub.com/), and then I ([Andi](https://www.github.com/andiemmadavies), project maintainer) was commissioned in 2017 to create them a new website from scratch when my parents became members. Click [here](https://www.triumphmayflowerclub.com/about) if you’re interested in reading more about the car and the club.
+TBA
 
 ## Install
 For now, our Web Fuzzer supports only Windows.
@@ -111,7 +110,7 @@ docker commit [CONTAINER ID] vulnerables/web-dvwa
 
 ## Roadmap
 
-This is a non-exhaustive list of the things I’d like to add in future development, in no particular order. This is obviously subject to change, but it should be a good indication of what’s to come. I’ll tick things off as and when they get done. I want to eventually get to a stage where I’ve provided enough tooling so that most of the content can be published by other people, so that I’m freed-up to work primarily on adding new features.
+TBA
 
 ### Features
 
