@@ -12,12 +12,12 @@ from vulnerabilities import broken_access_control
 from vulnerabilities import lfi
 from doc import generate_report
 
-DEBUG = True
+DEBUG = False
 
 VULN_DETECTORS_TO_DEBUG = {
     "BAC": True,
     "CI": True,
-    "LFI": True, 
+    "LFI": True,
     "SQLI": True,
     "XSS": True
 }
@@ -42,12 +42,6 @@ def input_login_url() -> str:
         else:
             print('Please enter y/n.')
 
-def input_id_pw() -> list[str, str]:
-    id: str = input("Enter ID: ")
-    pw: str = input("Enter PW: ")
-
-    return [id, pw]
-
 def function_start(name: str) -> None:  # 함수명을 출력해주는 함수
     print('\n')
     print("#" * 100)
@@ -59,10 +53,10 @@ def change_security(cookies, security):  # 쿠키 수정을 통해 DVWA security
 
     return cookies
 
-def dvwa(urls) -> list[str]:
+def dvwa(base_url, urls) -> list[str]:
     tmp_list: list[str] = []
     results: list[str] = []
-    base_pattern = r"http://localhost/vulnerabilities/"
+    base_pattern = base_url + r"/vulnerabilities/"
 
     for url in urls:
         if url.endswith("/#"):
@@ -282,7 +276,8 @@ def main():
 
     if login_url != '':
         # 로그인 정보 입력 받기
-        id, pw = "admin", "password" if DEBUG else input_id_pw()
+        id: str = "admin" if DEBUG else input("Enter ID: ")
+        pw: str = "password" if DEBUG else input("Enter PW: ")
 
     # 로그인
     if login_url != '':
@@ -304,7 +299,8 @@ def main():
     # [0] 타겟 페이지 크롤링
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
-    urls = dvwa(urls)  # 공격 타겟을 제한
+
+    if DEBUG: dvwa(base_url, urls)  # 공격 타겟을 제한
     print_urls(urls)
 
     ARGS = {
@@ -315,7 +311,10 @@ def main():
         "XSS": (urls, driver, cookies, testing_result)
     }
 
-    for func in filter(check_detector_to_debug, [BAC, CI, LFI, SQLI, XSS]):
+    detectors = [BAC, CI, LFI, SQLI, XSS]
+    detectors = filter(check_detector_to_debug, detectors) if DEBUG else detectors
+
+    for func in detectors:
         func(*ARGS[func.__name__])
 
     make_result_file(testing_result)
