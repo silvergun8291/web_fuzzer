@@ -132,6 +132,7 @@ def CI(driver, urls, cookies, testing_result):
         ci_result = []
 
         for url in urls:
+            pbar.update(1)
             if not command_injection.check_attackable(driver, url):
                 continue
 
@@ -150,10 +151,6 @@ def CI(driver, urls, cookies, testing_result):
                         ci_result.append(result)
                         testing_result.append(result)
                         break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
 
         print_result(ci_result)
 
@@ -175,6 +172,7 @@ def LFI(urls, driver, testing_result):
         lfi_result = []
 
         for url in target_urls:
+            pbar.update(1)
             for payload in payloads:
                 result = lfi.detect_lfi(driver, url, payload)
 
@@ -182,10 +180,6 @@ def LFI(urls, driver, testing_result):
                     lfi_result.append(result)
                     testing_result.append(result)
                     break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
 
         print_result(lfi_result)
 
@@ -201,6 +195,7 @@ def SQLI(urls, driver, cookies, testing_result):
         si_result = []
 
         for url in urls:
+            pbar.update(1)
             if not sql_injection.check_attackable(driver, url):
                 continue
 
@@ -219,10 +214,6 @@ def SQLI(urls, driver, cookies, testing_result):
                         testing_result.append(result)
                         break
 
-            pbar.update(1)
-
-        pbar.update(len(urls))
-
         print_result(si_result)
 
     time.sleep(2)
@@ -237,6 +228,8 @@ def XSS(urls, driver, cookies, testing_result):
         xss_result = []
 
         for url in urls:
+            pbar.update(1)
+
             if not xss.check_attackable(driver, url):
                 continue
 
@@ -254,10 +247,6 @@ def XSS(urls, driver, cookies, testing_result):
                         xss_result.append(result)
                         testing_result.append(result)
                         break
-
-            pbar.update(1)
-
-        pbar.update(len(urls))
 
         print_result(xss_result)
 
@@ -300,7 +289,7 @@ def main():
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
 
-    if DEBUG: dvwa(base_url, urls)  # 공격 타겟을 제한
+    if DEBUG: urls = dvwa(base_url, urls)  # 공격 타겟을 제한
     print_urls(urls)
 
     ARGS = {

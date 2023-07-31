@@ -110,7 +110,7 @@ def insert_meaningless_char(s) -> str:
     try:
         result = codecs.decode(s, 'unicode-escape')
     except:
-        print(s)
+        pass # print(s)
 
     return result
 
