@@ -275,7 +275,7 @@ def main():
     # 쿠키 가져오기
     c = driver.get_cookies()
     cookies = crawler.get_cookie(c)
-    cookies = change_security(cookies, 'high')
+    if DEBUG: cookies = change_security(cookies, 'high')
 
     print(f'\nCookie: {cookies}\n')
 
