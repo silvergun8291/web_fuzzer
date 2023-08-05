@@ -256,6 +256,7 @@ def main():
 
     testing_result = []
     driver = crawler.load_driver()
+    driver.implicitly_wait(3)
 
     # 타겟 URL 입력 받기
     base_url: str = "http://localhost" if DEBUG else input_target_url()
