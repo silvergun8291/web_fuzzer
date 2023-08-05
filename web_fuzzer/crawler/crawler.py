@@ -47,9 +47,11 @@ def login(driver, login_url, id, pw):  # login 함수
     elem.click()
 
 
-def crawl(base_url, url, driver):  # 쿠키 매개변수가 있는 수정된 crawl() 함수
+def crawl(base_url, url, driver, depth=0):  # 쿠키 매개변수가 있는 수정된 crawl() 함수
     # URL 방문
     driver.get(url)
+
+    depth += 1
 
     page_urls = []  # 현재 페이지의 URL을 저장하는 리스트
 
@@ -83,10 +85,10 @@ def crawl(base_url, url, driver):  # 쿠키 매개변수가 있는 수정된 cra
                     driver.switch_to.window(window_handles[1])
                 except TimeoutException:
                     print("Time Out!")
-
-    for page_url in page_urls:
-        sub_page_urls = crawl(base_url, page_url, driver)
-        page_urls.extend(sub_page_urls)
+    if depth <= 0:
+        for page_url in page_urls:
+            sub_page_urls = crawl(base_url, page_url, driver)
+            page_urls.extend(sub_page_urls)
 
     # 현재 페이지 처리 후에 뒤로 가기
     driver.back()
