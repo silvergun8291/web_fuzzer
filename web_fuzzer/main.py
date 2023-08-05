@@ -104,7 +104,7 @@ def show_report():
 
 
 # [1] Broken Access Control
-def BAC(base_url, urls, testing_result, driver, id, pw, login_url):
+def BAC(base_url, urls, testing_result, driver, login_url="", id="", pw=""):
 
     broken_access_control_pages = broken_access_control.get_result_urls(base_url + '/', urls)
     bac_result = []
@@ -293,7 +293,8 @@ def main():
     print_urls(urls)
 
     ARGS = {
-        "BAC": (base_url, urls, testing_result, driver, id, pw, login_url),
+        "BAC": (base_url, urls, testing_result, driver, login_url, id, pw) if login_url
+                    else (base_url, urls, testing_result, driver),
         "CI": (driver, urls, cookies, testing_result),
         "LFI": (urls, driver, testing_result),
         "SQLI": (urls, driver, cookies, testing_result),
