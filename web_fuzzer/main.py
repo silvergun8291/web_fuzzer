@@ -11,8 +11,11 @@ from vulnerabilities import command_injection
 from vulnerabilities import broken_access_control
 from vulnerabilities import lfi
 from doc import generate_report
+from dotenv import load_dotenv
 
-DEBUG = False
+load_dotenv()
+DEBUG = os.environ.get('DEBUG') == "True"
+DVWA = os.environ.get('DVWA') == "True"
 
 VULN_DETECTORS_TO_DEBUG = {
     "BAC": True,
@@ -258,16 +261,24 @@ def main():
     driver = crawler.load_driver()
     driver.implicitly_wait(3)
 
-    # 타겟 URL 입력 받기
-    base_url: str = "http://localhost" if DEBUG else input_target_url()
-
-    # 로그인 URL 입력 받기
-    login_url: str = "http://localhost/login.php" if DEBUG else input_login_url()
+    if DVWA:
+        base_url: str = "http://localhost"
+        login_url: str = "http://localhost/login.php"
+    elif DEBUG:
+        base_url: str = os.environ.get('BASE_URL')
+        login_url: str = os.environ.get('LOGIN_URL')
+    else:
+        base_url: str = input_target_url()
+        login_url: str = input_login_url()
 
     if login_url != '':
         # 로그인 정보 입력 받기
-        id: str = "admin" if DEBUG else input("Enter ID: ")
-        pw: str = "password" if DEBUG else input("Enter PW: ")
+        if DVWA:
+            id: str = "admin"
+            pw: str = "password"
+        else:
+            id: str = os.environ.get('ID') if DEBUG else input("Enter ID: ")
+            pw: str = os.environ.get('PW') if DEBUG else input("Enter PW: ")
 
     # 로그인
     if login_url != '':
@@ -276,7 +287,7 @@ def main():
     # 쿠키 가져오기
     c = driver.get_cookies()
     cookies = crawler.get_cookie(c)
-    if DEBUG: cookies = change_security(cookies, 'high')
+    if DVWA: cookies = change_security(cookies, 'high')
 
     print(f'\nCookie: {cookies}\n')
 
@@ -290,7 +301,7 @@ def main():
     function_start('crawl')
     urls = crawler.crawl(base_url, base_url, driver)
 
-    if DEBUG: urls = dvwa(base_url, urls)  # 공격 타겟을 제한
+    if DVWA: urls = dvwa(base_url, urls)  # 공격 타겟을 제한
     print_urls(urls)
 
     ARGS = {
