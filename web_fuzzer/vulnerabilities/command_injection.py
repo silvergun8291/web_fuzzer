@@ -69,6 +69,7 @@ def submit_form(driver, form_details, url, value) -> dict:
             elem.send_keys(payload)
         except:
             print(f"{name}을 찾을 수 없습니다.")
+            return result
 
         try:  # submit 버튼을 찾아서 클릭
             submit_button = driver.find_element(By.CSS_SELECTOR, 'input[type="submit"]')
