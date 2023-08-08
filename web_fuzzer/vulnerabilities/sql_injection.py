@@ -28,7 +28,6 @@ def submit_form(driver, form_details, url, value) -> dict:
 
     target_url = urljoin(url, form_details["action"])
     base_url = ""
-    joined_url = ""
     inputs = form_details["inputs"]
 
     if "session" in target_url.split("/")[-1]:
@@ -50,8 +49,7 @@ def submit_form(driver, form_details, url, value) -> dict:
             data[input_name] = input_value
 
     if form_details["method"] == "get":  # GET 방식으로 전송할 때
-        joined_url = target_url + "?" + urllib.parse.urlencode(data)
-        driver.get(joined_url)
+        driver.get(target_url + "?" + urllib.parse.urlencode(data))
         page_source = driver.page_source
 
         if ("fuzz" in page_source) or ("66757A7A" in page_source):
