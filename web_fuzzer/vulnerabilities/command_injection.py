@@ -1,10 +1,13 @@
 import time
 from urllib.parse import *
 from fuzzingbook.WebFuzzer import *
-from selenium.common import NoSuchElementException, NoAlertPresentException
+from selenium.common import NoSuchElementException, NoAlertPresentException, TimeoutException
 from selenium.webdriver.common.by import By
 from .command_injection_bypass import *
 import random
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 
 def check_attackable(driver, url) -> bool:
@@ -29,8 +32,7 @@ def submit_form(driver, form_details, url, value) -> dict:
     # command injection payload 전송 함수
 
     result = {"Vulnerability": "", "URL": "", "Method": "", "Payload": ""}  # 결과를 저장할 변수
-    target_url = urljoin(url, form_details["action"])
-    joined_url = ""
+
     inputs = form_details["inputs"]
 
     # 공격 인자값 가져오기
@@ -46,8 +48,8 @@ def submit_form(driver, form_details, url, value) -> dict:
             data[input_name] = input_value
 
     if form_details["method"] == "get":  # GET 방식으로 전송할 때
-        joined_url = target_url + "?" + urllib.parse.urlencode(data)
-        driver.get(joined_url)
+        target_url = urljoin(url, form_details["action"])
+        driver.get(target_url + "?" + urllib.parse.urlencode(data))
 
         page_source: str = driver.page_source
 
@@ -63,13 +65,17 @@ def submit_form(driver, form_details, url, value) -> dict:
     elif form_details["method"] == "post":  # POST 방식으로 전송할 때
         name, payload = next(iter(data.items()))
         submit_button = None
+        if driver.current_url != url:
+            driver.get(url)
+            try:
+                # 페이지가 로드되기를 기다림
+                element_present = EC.presence_of_element_located((By.NAME, name))
+                WebDriverWait(driver, 10).until(element_present)
+            except TimeoutException:
+                print("페이지 로드 타임아웃")
 
-        try:
-            elem = driver.find_element(By.NAME, name)
-            elem.send_keys(payload)
-        except:
-            print(f"{name}을 찾을 수 없습니다.")
-            return result
+        elem = driver.find_element(By.NAME, name)
+        elem.send_keys(payload)
 
         try:  # submit 버튼을 찾아서 클릭
             submit_button = driver.find_element(By.CSS_SELECTOR, 'input[type="submit"]')
@@ -79,6 +85,7 @@ def submit_form(driver, form_details, url, value) -> dict:
             except NoSuchElementException:
                 print("해당 요소를 찾을 수 없습니다.")
 
+        time.sleep(3)
         submit_button.click()
 
         try:
