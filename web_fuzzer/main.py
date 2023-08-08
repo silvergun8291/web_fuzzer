@@ -166,6 +166,7 @@ def LFI(urls, driver, testing_result):
     function_start("Local File Inclusion")
 
     target_urls = lfi.find_target_url(urls)
+    if not target_urls: return
     target_file = 'etc/passwd'
 
     target_path = lfi.get_target_path(target_file)
