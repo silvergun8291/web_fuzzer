@@ -1,6 +1,8 @@
 from fuzzingbook.WebFuzzer import *
 from selenium.common import NoSuchElementException, NoAlertPresentException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def check_attackable(driver, url) -> bool:
@@ -65,6 +67,15 @@ def submit_form(driver, form_details, url, value) -> dict:
         username = keys[0]
         password = keys[1]
 
+        if driver.current_url != url:
+            driver.get(url)
+            try:
+                # 페이지가 로드되기를 기다림
+                element_present = EC.presence_of_element_located((By.NAME, username))
+                WebDriverWait(driver, 10).until(element_present)
+            except Exception:
+                print("페이지 로드 타임아웃")
+
         try:
             elem = driver.find_element(By.NAME, username)
             elem2 = driver.find_element(By.NAME, password)
@@ -77,14 +88,17 @@ def submit_form(driver, form_details, url, value) -> dict:
         except NoSuchElementException:
             print(driver.page_source)
 
+        submit_button = None
         try:  # submit 버튼을 찾아서 클릭
             submit_button = driver.find_element(By.CSS_SELECTOR, 'input[type="submit"]')
-            submit_button.click()
         except NoSuchElementException:
             try:  # submit 버튼을 찾아서 클릭
                 submit_button = driver.find_element(By.CSS_SELECTOR, 'button[type="button"]')
             except NoSuchElementException:
                 print("해당 요소를 찾을 수 없습니다.")
+
+        time.sleep(3)
+        submit_button.click()
 
         try:
             # 알림 창 무시하고 진행
