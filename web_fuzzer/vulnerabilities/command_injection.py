@@ -13,6 +13,13 @@ from selenium.webdriver.support import expected_conditions as EC
 def check_attackable(driver, url) -> bool:
     # WebDriver 초기화
     driver.get(url)
+    try:
+        # 페이지가 로드되기를 기다림
+        input_elements_text = EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text']"))
+        WebDriverWait(driver, 10).until(input_elements_text)
+    except TimeoutException:
+        print("페이지 로드 타임아웃")
+        return False
 
     # 모든 input 요소와 select 요소 검색
     input_elements_text = driver.find_elements(By.CSS_SELECTOR, "input[type='text']")
@@ -47,12 +54,20 @@ def submit_form(driver, form_details, url, value) -> dict:
         if input_name and input_value:
             data[input_name] = input_value
 
+    if data == {}:
+        return result
+
     if form_details["method"] == "get":  # GET 방식으로 전송할 때
         target_url = urljoin(url, form_details["action"])
         driver.get(target_url + "?" + urllib.parse.urlencode(data))
+        try:
+            # 페이지가 로드되기를 기다림
+            element_present = EC.presence_of_element_located((By.TAG_NAME, 'body'))
+            WebDriverWait(driver, 10).until(element_present)
+        except TimeoutException:
+            print("페이지 로드 타임아웃")
 
         page_source: str = driver.page_source
-
         time.sleep(0.5)
 
         # command injection 공격이 성공했는지 확인 후 결과 반환

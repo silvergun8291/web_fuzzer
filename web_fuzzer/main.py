@@ -119,14 +119,6 @@ def BAC(base_url, urls, testing_result, driver, login_url="", id="", pw=""):
 
     print_result(bac_result)
 
-    # 로그인
-    if login_url != '':
-        crawler.login(driver, login_url, id, pw)
-
-    time.sleep(2)
-    print()
-
-
 # [2] Command Injection
 def CI(driver, urls, cookies, testing_result):
     function_start("Command Injection")

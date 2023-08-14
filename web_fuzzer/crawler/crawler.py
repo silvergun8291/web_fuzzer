@@ -10,7 +10,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
 
+load_dotenv()
+DVWA = os.environ.get('DVWA') == "True"
 
 visited_urls = set()
 def get_cookie(cookies) -> dict:  # 주어진 데이터중 필요한 부분을 뽑아서 쿠키를 만들어 반환
@@ -37,15 +40,15 @@ def load_driver():  # driver 반환 함수
 def login(driver, login_url, id, pw):  # login 함수
     driver.get(login_url)
 
-    elem = driver.find_element(By.NAME, "username" if os.environ.get("DVWA") else os.environ.get('ID_INPUT_NAME'))
+    elem = driver.find_element(By.NAME, "username" if DVWA else os.environ.get('ID_INPUT_NAME'))
     elem.send_keys(id)
 
     time.sleep(0.5)
-    elem = driver.find_element(By.NAME, "password" if os.environ.get("DVWA") else os.environ.get('PW_INPUT_NAME'))
+    elem = driver.find_element(By.NAME, "password" if DVWA else os.environ.get('PW_INPUT_NAME'))
     elem.send_keys(pw)
 
     time.sleep(0.5)
-    elem = driver.find_element(By.NAME, "Login" if os.environ.get("DVWA") else os.environ.get('SUBMIT_INPUT_NAME'))
+    elem = driver.find_element(By.NAME, "Login" if DVWA else os.environ.get('SUBMIT_INPUT_NAME'))
     elem.click()
 
 
