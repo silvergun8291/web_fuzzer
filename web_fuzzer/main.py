@@ -136,6 +136,7 @@ def CI(driver, urls, cookies, testing_result):
 
         for url in urls:
             pbar.update(1)
+            time.sleep(0.5)
             if not command_injection.check_attackable(driver, url):
                 continue
 
@@ -148,6 +149,7 @@ def CI(driver, urls, cookies, testing_result):
                 payloads = command_injection.generate_payload(50)
 
                 for payload in payloads:
+                    time.sleep(1)
                     result = command_injection.submit_form(driver, form_details, url, payload)
 
                     if result["Vulnerability"] != "":
@@ -261,6 +263,7 @@ def main():
     testing_result = []
     driver = crawler.load_driver()
     driver.implicitly_wait(3)
+    driver.set_script_timeout(15)
 
     if DVWA:
         base_url: str = "http://localhost"
