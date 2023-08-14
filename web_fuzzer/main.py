@@ -14,7 +14,6 @@ from doc import generate_report
 from dotenv import load_dotenv
 
 load_dotenv()
-DEBUG = os.environ.get('DEBUG') == "True"
 DVWA = os.environ.get('DVWA') == "True"
 
 VULN_DETECTORS_TO_DEBUG = {
@@ -260,12 +259,9 @@ def main():
     if DVWA:
         base_url: str = "http://localhost"
         login_url: str = "http://localhost/login.php"
-    elif DEBUG:
+    else:
         base_url: str = os.environ.get('BASE_URL')
         login_url: str = os.environ.get('LOGIN_URL')
-    else:
-        base_url: str = input_target_url()
-        login_url: str = input_login_url()
 
     if login_url != '':
         # 로그인 정보 입력 받기
@@ -273,8 +269,8 @@ def main():
             id: str = "admin"
             pw: str = "password"
         else:
-            id: str = os.environ.get('ID') if DEBUG else input("Enter ID: ")
-            pw: str = os.environ.get('PW') if DEBUG else input("Enter PW: ")
+            id: str = os.environ.get('ID')
+            pw: str = os.environ.get('PW')
 
     # 로그인
     if login_url != '':
@@ -310,7 +306,7 @@ def main():
     }
 
     detectors = [BAC, CI, LFI, SQLI, XSS]
-    detectors = filter(check_detector_to_debug, detectors) if DEBUG else detectors
+    detectors = filter(check_detector_to_debug, detectors)
 
     for func in detectors:
         func(*ARGS[func.__name__])
