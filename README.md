@@ -42,10 +42,24 @@ Chrome is neccessary! we use chrome for selenium webdriver inside.
 
 ### usage
 
+First, set .env for your target that you want to investigate.
+Then you can run command like below
+
 ```sh
 python web_fuzzer/main.py
 ```
-then you can enter information of your target that you want to investigate
+
+### how to config .env
+- DVWA: this is for newcomers, only use with DVWA turn it "True" to use this.
+
+options below works when DVWA set "False"
+- BASE_URL: target base url
+- LOGIN_URL: login url for target
+- ID: test id
+- PW: test password
+- ID_INPUT_NAME: login input tag name attr value for ID 
+- PW_INPUT_NAME: login input tag name attr value for PW 
+- SUBMIT_INPUT_NAME: login input tag name attr value for login button
 
 ### DVWA
 if you don't have any target for security testing, here's DVWA for you.

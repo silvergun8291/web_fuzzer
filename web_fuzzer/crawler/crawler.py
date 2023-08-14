@@ -37,15 +37,15 @@ def load_driver():  # driver 반환 함수
 def login(driver, login_url, id, pw):  # login 함수
     driver.get(login_url)
 
-    elem = driver.find_element(By.NAME, os.environ.get('ID_INPUT_NAME'))
+    elem = driver.find_element(By.NAME, "username" if os.environ.get("DVWA") else os.environ.get('ID_INPUT_NAME'))
     elem.send_keys(id)
 
     time.sleep(0.5)
-    elem = driver.find_element(By.NAME, os.environ.get('PW_INPUT_NAME'))
+    elem = driver.find_element(By.NAME, "password" if os.environ.get("DVWA") else os.environ.get('PW_INPUT_NAME'))
     elem.send_keys(pw)
 
     time.sleep(0.5)
-    elem = driver.find_element(By.NAME, os.environ.get('SUBMIT_INPUT_NAME'))
+    elem = driver.find_element(By.NAME, "Login" if os.environ.get("DVWA") else os.environ.get('SUBMIT_INPUT_NAME'))
     elem.click()
 
 
