@@ -1,4 +1,6 @@
 import re
+import os
+import time
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -11,8 +13,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 visited_urls = set()
-
-
 def get_cookie(cookies) -> dict:  # 주어진 데이터중 필요한 부분을 뽑아서 쿠키를 만들어 반환
     return {cookie.get('name'): cookie.get('value') for cookie in cookies}
 
@@ -37,13 +37,15 @@ def load_driver():  # driver 반환 함수
 def login(driver, login_url, id, pw):  # login 함수
     driver.get(login_url)
 
-    elem = driver.find_element(By.NAME, "username")
+    elem = driver.find_element(By.NAME, os.environ.get('ID_INPUT_NAME'))
     elem.send_keys(id)
 
-    elem = driver.find_element(By.NAME, "password")
+    time.sleep(0.5)
+    elem = driver.find_element(By.NAME, os.environ.get('PW_INPUT_NAME'))
     elem.send_keys(pw)
 
-    elem = driver.find_element(By.NAME, "Login")
+    time.sleep(0.5)
+    elem = driver.find_element(By.NAME, os.environ.get('SUBMIT_INPUT_NAME'))
     elem.click()
 
 
