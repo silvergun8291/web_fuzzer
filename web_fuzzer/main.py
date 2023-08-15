@@ -4,6 +4,7 @@ import re
 import os
 import webbrowser
 from tqdm import tqdm
+from urllib.parse import urljoin
 from crawler import crawler
 from vulnerabilities import xss
 from vulnerabilities import sql_injection
@@ -124,6 +125,7 @@ def CI(driver, urls, cookies, testing_result):
 
     with tqdm(total=len(urls), ncols=100, desc="Command Injection", mininterval=0.1) as pbar:
         ci_result = []
+        ci_uri = []
 
         for url in urls:
             pbar.update(1)
@@ -137,6 +139,12 @@ def CI(driver, urls, cookies, testing_result):
 
             for form in forms:
                 form_details = crawler.get_form_details(form)
+                uri = urljoin(url, form_details["action"]) + "?" + form_details["inputs"][0].get("name") + "="
+                if form_details['method'] == "get":
+                    if uri in ci_uri:
+                        continue
+                    ci_uri.append(uri)
+
                 payloads = command_injection.generate_payload(50)
 
                 for payload in payloads:

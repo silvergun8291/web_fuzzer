@@ -1,7 +1,8 @@
 import time
 from urllib.parse import *
 from fuzzingbook.WebFuzzer import *
-from selenium.common import NoSuchElementException, NoAlertPresentException, TimeoutException
+from selenium.common import NoSuchElementException, NoAlertPresentException, TimeoutException, \
+    ElementNotInteractableException
 from selenium.webdriver.common.by import By
 from .command_injection_bypass import *
 import random
@@ -12,8 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def check_attackable(driver, url) -> bool:
     # WebDriver 초기화
-    driver.get(url)
     try:
+        driver.get(url)
         # 페이지가 로드되기를 기다림
         input_elements_text = EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text']"))
         WebDriverWait(driver, 10).until(input_elements_text)
@@ -88,6 +89,7 @@ def submit_form(driver, form_details, url, value) -> dict:
                 WebDriverWait(driver, 10).until(element_present)
             except TimeoutException:
                 print("페이지 로드 타임아웃")
+                return result
 
         elem = driver.find_element(By.NAME, name)
         elem.send_keys(payload)
@@ -99,9 +101,15 @@ def submit_form(driver, form_details, url, value) -> dict:
                 submit_button = driver.find_element(By.CSS_SELECTOR, 'button[type="button"]')
             except NoSuchElementException:
                 print("해당 요소를 찾을 수 없습니다.")
+                return result
+
 
         time.sleep(3)
-        submit_button.click()
+        try:
+            submit_button.click()
+        except ElementNotInteractableException as e:
+            print(e)
+            return result
 
         try:
             # 알림 창 무시하고 진행
